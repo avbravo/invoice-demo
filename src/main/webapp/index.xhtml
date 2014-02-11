@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/resources/template.xhtml">
+    
+		<ui:define name="pageTitle">#{bundle['app.name']}</ui:define>
+		<ui:define name="pageHeader">#{bundle['system.title']}</ui:define>
+		
+        <ui:define name="body">
+                
+            <h:form id="editform">  
+                
+                <p:focus for="ci"/>
+                <p:panel id="datapanel" style="width: 70%;">
+                    <h:panelGrid id="cipanel" 
+                            columns="2" style="margin-bottom:10px">
+                        <h:outputLabel for="ci" value="CI: *" />  
+                        <p:inputText id="ci" size="10" required="true"
+                                  value="#{employeeController.cedula}" >
+                            <p:ajax event="blur" update="datapanel dependencia cargo"    
+                                 listener="#{employeeController.search}" />                              
+                        </p:inputText>
+                        
+                        <h:outputLabel for="nombreApellido" value="Nombre y Apellido: *" />  
+                        <p:inputText id="nombreApellido" 
+                                  value="#{employeeController.empleado.nombreApellido}" />
+
+                        <h:outputLabel for="fechaNacimiento" value="Fecha de Nacimiento: *" />                                  
+                        <p:calendar id="fechaNacimiento" size="9" 
+                               pattern="#{datePattern}" required="true"
+                                 style="text-align: center; "
+                                 value="#{employeeController.empleado.fechaNacimiento}"/>
+                          
+                        <h:outputLabel for="direccion" value="Dirección: *" />  
+                        <p:inputText id="direccion" required="true"
+                                  value="#{employeeController.empleado.direccion}" />
+                          
+                        <h:outputLabel for="ciudad" value="Ciudad: *" />  
+                        <p:inputText id="ciudad" required="true"
+                                  value="#{employeeController.empleado.ciudad}" />
+                          
+                        <h:outputLabel for="nroTelefono" value="Nro Teléfono Particular:" />  
+                        <p:inputText id="nroTelefono" 
+                                  value="#{employeeController.empleado.nroTelefono}" />
+                          
+                        <h:outputLabel for="nroInterno" value="Nro Interno:" />  
+                        <p:inputText id="nroInterno" 
+                                  value="#{employeeController.empleado.nroInterno}" />
+                          
+                        <h:outputLabel for="nroCelular" value="Nro Celular Particular:" />  
+                        <p:inputText id="nroCelular" 
+                                  value="#{employeeController.empleado.nroCelular}" />
+                          
+                        <h:outputLabel for="nroCelularCorporativo"  
+                                     value="Nro Celular Corporativo:" />  
+                        <p:inputText id="nroCelularCorporativo"  
+                                  value="#{employeeController.empleado.nroCelularCorporativo}" />
+    
+                        <h:outputLabel for="email" value="e-mail:" />  
+                        <p:inputText id="email" 
+                                  value="#{employeeController.empleado.email}" />
+                          
+                        <h:outputLabel for="emailCorporativo" value="e-mail Corporativo:" />  
+                        <p:inputText id="emailCorporativo" 
+                                  value="#{employeeController.empleado.emailCorporativo}" />
+                          
+                        <h:outputLabel for="urgenciaComunicacion" value="En caso de emergencia: *" />  
+                        <p:inputTextarea id="urgenciaComunicacion" rows="4" cols="30" required="true"
+                                      value="#{employeeController.empleado.urgenciaComunicacion}" />
+                          
+                        <h:outputLabel for="titulo" value="Título Academico: *" />  
+                        <p:inputText id="titulo" required="true"
+                                  value="#{employeeController.empleado.titulo}" />
+                          
+                        <h:outputLabel for="cargo" value="Cargo: *" />  
+                        <p:selectOneMenu id="cargo" styleClass="combobox"
+                                   required="true" immediate="true"
+                                      value="#{employeeController.empleado.cargo}">
+                            <f:selectItems id="cargos_se" value="#{comboBoxActiveCargos}" 
+                                          var="_cargo" itemLabel="#{_cargo.descripcion}"
+                                          noSelectionValue="#{_cargo[0]}"/>
+                        </p:selectOneMenu>
+                          
+                        <h:outputLabel for="dependencia" value="Dependencia: *" />  
+                        <p:selectOneMenu id="dependencia" styleClass="combobox"
+                                   required="true" immediate="true"
+                                      value="#{employeeController.empleado.dependencia}">
+                            <f:selectItems id="dependencias_se" value="#{comboBoxActiveDependencias}" 
+                                          var="_dependencia" itemLabel="#{_dependencia.nombreDependencia}"
+                                          noSelectionValue="#{_dependencia[0]}"/>
+                        </p:selectOneMenu>
+                          
+                        <h:outputLabel for="nroPlaqueta" value="Nro. Plaqueta: *" />  
+                        <p:inputText id="nroPlaqueta" size="7" 
+                                  style="text-align: right;" required="true"
+                                  value="#{employeeController.empleado.nroPlaqueta}" />
+                          
+                        <h:outputLabel for="alergicoa" value="Alergico a: *" />  
+                        <p:inputText id="alergicoa" required="true"
+                                  value="#{employeeController.empleado.alergicoa}" />
+                          
+                        <h:outputLabel for="grupoSanguieno" value="Grupo Sangüíeno: *" />  
+                        <h:selectOneRadio id="grupoSanguieno" layout="lineDirection" immediate="true"
+                                   converter="BloodTypeConverter"  
+                                       value="#{employeeController.bloodType}" >
+                            <f:selectItems id="bloodTypes" value="#{bloodTypes}" 
+                                          var="_bloodTypes" itemLabel="#{_bloodTypes.type}" />
+                        </h:selectOneRadio>
+                          
+                    </h:panelGrid>  
+                </p:panel>
+          
+                <br />
+                <p:commandButton id="submitButton" value="#{bundle['label.save']}" 
+                     actionListener="#{employeeController.save}" update="datapanel"/>  
+                      
+            </h:form>
+            
+		</ui:define>
+            
+	</ui:composition>
+</html>
