@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+   		<f:loadBundle basename="py.com.icarusdb.demo.resources.Messages" var="bundle" />
+        
+		<h:head>
+    		<title>
+                <ui:insert name="pageTitle" />
+            </title>
+            
+    		<style type="text/css">
+    			body {
+    				  font-family: geneva, Verdana, Arial, Helvetica, sans-serif;
+    				  font-size: 14px;
+                      background: url(resources/gfx/background/macback.png);
+                      margin: 0;
+                      padding: 0;
+                      font-size:80%;
+                      
+    			}
+    			.header {
+    				  font-family: Verdana, Arial, Helvetica, sans-serif;
+    				  font-size: 18px;
+    			}
+    			.bottom {
+    				  font-family: Verdana, Arial, Helvetica, sans-serif;
+    				  font-size: 9px;
+    				  text-align: center;
+    				  vertical-align: middle;
+    				  color: #8E969D;
+    			}
+    		</style>
+		</h:head>
+
+        <h:body >
+            
+            <p:growl id="messages" autoUpdate="true" />
+              
+            <p:outputPanel id="mainpanel" >
+
+                <table width="100%" border="0">
+                    <tr valign="top" align="center">
+                        <td width="50%" style="font-size: xx-large;">
+                			<ui:insert name="pageHeader" />
+                            </td>
+                        <td >
+                            <p:themeSwitcher style="width:165px" id="defaultSwitcher">  
+                                <f:selectItem itemLabel="Choose Theme" itemValue="" />  
+                                <f:selectItems value="#{themeSwitcherBean.themes}" />  
+                            </p:themeSwitcher> 
+                        </td>
+                    </tr>
+                </table>
+                <p:spacer height="20px" />
+                <table width="80%" border="0" align="center">
+                    <tr valign="top" align="right">
+                        <td >
+                            <h:outputLink id="loginLink" title="login"
+                                       value="javascript:void(0)" onclick="loginDlg.show()" 
+                                    rendered="#{not loggedIn}">     
+                                <p:graphicImage value="/resources/gfx/login.png" />  
+                            </h:outputLink>
+                            <h:form id="logoutform">
+                                <h:commandLink id="logoutLink" value="logout"
+                                         rendered="#{loggedIn}" 
+                                            style="text-decoration: none;"
+                                           action="#{login.logout()}" />     
+                            </h:form>
+                        </td> </tr>
+                    <tr valign="top" align="center">
+                        <td >
+            				<ui:insert name="body" />
+                        </td>
+                    </tr>
+                </table>
+            
+            </p:outputPanel>
+            
+            
+            <p:ajaxStatus id="ajaxstatuspanel" 
+                       style="width:64px;height:64px;position:fixed;right:5px;bottom:5px">
+                <f:facet name="start">
+                    <p:graphicImage value="/resources/gfx/loading.gif" />
+                </f:facet>
+        
+                <f:facet name="complete">
+                    <h:outputText value="" />
+                </f:facet>
+            </p:ajaxStatus>
+            
+            <p:dialog id="logindialog" header="Login" widgetVar="loginDlg">  
+                <h:form id="loginform">  
+                    <h:panelGrid columns="2" cellpadding="5">  
+                        <h:outputLabel for="username" value="Username:" />  
+                        <p:inputText value="#{credentials.username}"   
+                                id="username" required="true" label="username" />  
+                          
+                        <h:outputLabel for="password" value="Password:" />  
+                        <h:inputSecret id="password" label="password"   
+                                    value="#{credentials.password}" required="true" />  
+                          
+                        <f:facet name="footer">  
+                            <p:commandButton id="loginButton" value="Login" 
+                                         update=":messages,:detailform:collection,:logoutform"   
+                                 actionListener="#{login.login}"   
+                                     oncomplete="handleLoginRequest(xhr, status, args)"/>  
+                        </f:facet>  
+                    </h:panelGrid>  
+                      
+                </h:form>  
+            </p:dialog>              
+            
+            <script type="text/javascript">  
+                function handleLoginRequest(xhr, status, args) {  
+                    if(args.validationFailed) {  
+                        jQuery('#logindialog').effect("shake", { times:3 }, 100);  
+                    } else {  
+                        loginDlg.hide();  
+                        jQuery('#loginLink').fadeOut();  
+                    }  
+                }  
+            </script>              
+            
+        </h:body>
+        		
+</html>
