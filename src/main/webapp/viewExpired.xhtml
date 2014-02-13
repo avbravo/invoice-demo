@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/resources/templates/dashboard.xhtml">
+    
+        <ui:define name="content">
+            <h:form>
+                <h:outputText value="#{bundle['error.view.expired']}" />
+                <p>You were on page #{currentViewId}. Maybe that's useful.</p>
+                <p>
+                    Please re-login via the
+                    <h:outputLink styleClass="homepagelink"
+                                  value="#{request.contextPath}/index.xhtml">
+                        <h:outputText value="Homepage" />
+                    </h:outputLink>
+                    .
+                </p>
+            </h:form>
+        </ui:define>
+    
+    </ui:composition>
+    
+    
+</html>

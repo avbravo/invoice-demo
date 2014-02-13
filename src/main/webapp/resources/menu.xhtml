@@ -1,0 +1,122 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <h:form id="menubar_form" styleClass="containerWidth" >
+
+        <table class="containerWidth">
+            <tr>
+                <td class="menuWidth" >
+                    <p:menubar id="bar_mainmenu" >  
+                    
+                        <p:menuitem id="mi-home" value="home" icon="ui-icon-home"
+                                   url="#{navigationRulez.moduleUri}" />  
+                        
+                        <p:submenu icon="ui-icon-bookmark"  
+                            label="#{bundle['invoices']}">  
+                            
+                            <p:menuitem id="mi-add-invoice" icon="ui-icon-circle-plus"  
+                                     value="#{bundle['add']} #{bundle['invoice']}" 
+                                      ajax="false" action="#" />
+                                        
+                            <p:menuitem id="mi-pending-invoice" icon="ui-icon-circle-check" 
+                                     value="#{bundle['invoice.pending']}" 
+                                      ajax="false" action="#" />
+                                        
+                        </p:submenu>  
+                          
+                        <p:submenu label="#{bundle['queries']}" icon="ui-icon-search">
+                        
+                            <p:menuitem value="Op..1" ajax="false" action="#" />  
+                                      
+                            <p:menuitem value="Op..2" ajax="false" action="#" />  
+                                      
+                        </p:submenu>  
+                          
+                        <p:submenu label="#{bundle['admin']}" >
+                        
+                            <p:menuitem value="Op..1" ajax="false" action="#" />  
+                                      
+                            <p:menuitem value="Op..2" ajax="false" action="#" />  
+
+                            <p:separator /> 
+                                                                  
+                            <p:menuitem id="mi-user-settings" icon="ui-icon-person"
+                                  rendered="#{credentials.hasRol('supermaster')}"
+                                     value="#{bundle['user-settings']}" 
+                            actionListener="#{contextHelper.setSelectedMenu(actionUserSetting)}"
+                                      ajax="false" action="#" />  
+
+                            <p:separator /> 
+                                                                  
+                            <p:menuitem rendered="#{credentials.hasRol('supermaster')}"
+                                        value="Op..x+y" ajax="false" action="#" />  
+            
+                            <p:menuitem value="Op..x+1" ajax="false" action="#" />  
+                                      
+                            <p:menuitem value="Op..x+2" ajax="false" action="#" />  
+                                      
+                                      
+                        </p:submenu>  
+            
+                        <p:submenu icon="ui-icon-star" label="about">  
+                            <p:menuitem value="#{bundle['label.about']}" url="#" 
+                                      onclick="about.show();" />  
+                        </p:submenu>  
+                                  
+                    </p:menubar>  
+                    </td>
+                <td >
+                    <div align="right">
+                    <p:outputPanel autoUpdate="true">
+                        <p:menubar id="bar_logout" 
+                             rendered="#{login.loggedIn}" >  
+                            <p:menuitem id="logout" value="Logout " icon="ui-icon-close"
+                                   ajax="false" action="#{login.logout}" />
+                        </p:menubar>
+                    </p:outputPanel>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    
+    </h:form>
+
+    <p:dialog header="#{bundle['label.about']}" draggable="true" widgetVar="about"
+              showEffect="fade" hideEffect="fade" resizable="false">
+        <h:form>
+            <p:spacer height="10px" />
+            <p:outputPanel autoUpdate="true">
+                <h:panelGrid columns="1" style="width:100%; text-align:center;">
+                    <p:graphicImage value="/resources/gfx/logo.jpg" />
+                    <h:outputText value="Invoice Demo: { #{credentials.companyName} }" style="font-size:16px" />
+                    <h:outputText value="Version 1.0.0" />
+                </h:panelGrid>
+            </p:outputPanel>
+
+            <p:spacer height="10px" />
+            <h:panelGrid columns="2" >
+                <h:outputText value="Processor" style="font-weight:bold" />
+                <h:outputText value="2.4 GHz Intel Core 2 Duo" />
+
+                <h:outputText value="Memory" style="font-weight:bold" />
+                <h:outputText value="8 GB 1033 MHz DDR3 " />
+
+                <h:outputText value="OS" style="font-weight:bold" />
+                <h:outputText value="CrunchBang Linux 11" />
+
+                <h:outputText value="developer" style="font-weight:bold" />
+                <h:outputText value="Icarus" />
+                
+                <h:outputText value="sys-admin" style="font-weight:bold" />
+                <h:outputText value="lu[gau]cho benitez" />
+                
+            </h:panelGrid>
+
+        </h:form>
+    </p:dialog>
+
+            
+</ui:composition>

@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/resources/templates/dashboard.xhtml">
+    
+        <ui:define name="content">
+            <div align="center">
+                <h:form id="notfoudform">
+                    <h:outputLink id="notfoundlink" 
+                               value="#{request.contextPath}/index.html">
+                        <p:graphicImage value="/resources/gfx/404.jpg" />
+                    </h:outputLink>
+                </h:form>
+                <p:panel rendered="#{not empty currentViewId}">
+                    <p>You were on page #{currentViewId}. Maybe that's useful.</p>
+                </p:panel>
+            </div>
+        </ui:define>
+    
+    </ui:composition>
+    
+    
+</html>

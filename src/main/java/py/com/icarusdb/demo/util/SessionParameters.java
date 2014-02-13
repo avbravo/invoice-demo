@@ -31,5 +31,14 @@ public class SessionParameters extends GlobalParameters
         return AppHelper.getLocale();
     }
     
+    // User Setting
+    public final static String ACTION_MENU_USERSETTING = "UserSettingAction";
+    
+    @Produces @Named final String getActionUserSetting()
+    {
+        return ACTION_MENU_USERSETTING;
+    }
+    
+    
     
 }

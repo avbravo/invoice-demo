@@ -63,7 +63,7 @@ public class Login implements Serializable
     @Named
     public boolean isLoggedIn()
     {
-        return credentials.getUsername() != null;
+        return credentials != null && credentials.getUsername() != null;
     }
 
 }

@@ -6,35 +6,16 @@
       xmlns:p="http://primefaces.org/ui">
       
    		<f:loadBundle basename="py.com.icarusdb.demo.resources.Messages" var="bundle" />
-        
-		<h:head>
-    		<title>
-                <ui:insert name="pageTitle" />
-            </title>
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             
-    		<style type="text/css">
-    			body {
-    				  font-family: geneva, Verdana, Arial, Helvetica, sans-serif;
-    				  font-size: 14px;
-                      background: url(resources/gfx/background/macback.png);
-                      margin: 0;
-                      padding: 0;
-                      font-size:80%;
-                      
-    			}
-    			.header {
-    				  font-family: Verdana, Arial, Helvetica, sans-serif;
-    				  font-size: 18px;
-    			}
-    			.bottom {
-    				  font-family: Verdana, Arial, Helvetica, sans-serif;
-    				  font-size: 9px;
-    				  text-align: center;
-    				  vertical-align: middle;
-    				  color: #8E969D;
-    			}
-    		</style>
-		</h:head>
+            <h:outputStylesheet library="css" name="screen.css" />
+            <h:outputStylesheet library="css" name="extras.css" />
+            
+            <title>#{bundle['app.name']}::#{bundle['app.module']}.</title>
+            
+            <ui:insert name="head" />
+        </h:head>
 
         <h:body >
             
@@ -57,19 +38,36 @@
                 </table>
                 <p:spacer height="20px" />
                 <table width="80%" border="0" align="center">
-                    <tr valign="top" align="right">
+                    <tr valign="top" >
+                        <td align="center">
+                        <table width="100%" border="0" align="center">
+                            <tr >
+                                <td align="left">
+                                    <p:outputPanel autoUpdate="true">
+                                       <h:outputText rendered="#{loggedIn}" id="remoteConnInfo"
+                                            styleClass="textos"
+                                            value="#{credentials.username} :: #{credentials.ipAddr}" />
+                                    </p:outputPanel>
+                                </td>
+                                <td align="right">
+                                    <h:outputLink id="loginLink" title="login"
+                                               value="javascript:void(0)" onclick="loginDlg.show()" 
+                                            rendered="#{not loggedIn}">     
+                                        <p:graphicImage value="/resources/gfx/login.png" />  
+                                    </h:outputLink>
+                                    <h:form id="logoutform" rendered="false">
+                                        <h:commandLink id="logoutLink" value="#{bundle['login.logout']}"
+                                                 rendered="#{loggedIn}" 
+                                                    style="text-decoration: none;"
+                                                   action="#{login.logout()}" />     
+                                    </h:form>
+                                </td> 
+                            </tr>
+                        </table>
+                        </td> </tr>
+                    <tr valign="top" align="center">
                         <td >
-                            <h:outputLink id="loginLink" title="login"
-                                       value="javascript:void(0)" onclick="loginDlg.show()" 
-                                    rendered="#{not loggedIn}">     
-                                <p:graphicImage value="/resources/gfx/login.png" />  
-                            </h:outputLink>
-                            <h:form id="logoutform">
-                                <h:commandLink id="logoutLink" value="logout"
-                                         rendered="#{loggedIn}" 
-                                            style="text-decoration: none;"
-                                           action="#{login.logout()}" />     
-                            </h:form>
+                            <ui:include src="/resources/menu.xhtml" />
                         </td> </tr>
                     <tr valign="top" align="center">
                         <td >
@@ -79,7 +77,6 @@
                 </table>
             
             </p:outputPanel>
-            
             
             <p:ajaxStatus id="ajaxstatuspanel" 
                        style="width:64px;height:64px;position:fixed;right:5px;bottom:5px">
@@ -95,17 +92,22 @@
             <p:dialog id="logindialog" header="Login" widgetVar="loginDlg">  
                 <h:form id="loginform">  
                     <h:panelGrid columns="2" cellpadding="5">  
-                        <h:outputLabel for="username" value="Username:" />  
+
+                        <h:outputLabel for="companyName" value="#{bundle['login.companyName']}:" />  
+                        <p:inputText value="#{credentials.companyName}"   
+                                id="companyName" required="true" label="companyName" />  
+                          
+                        <h:outputLabel for="username" value="#{bundle['login.username']}:" />  
                         <p:inputText value="#{credentials.username}"   
                                 id="username" required="true" label="username" />  
                           
-                        <h:outputLabel for="password" value="Password:" />  
+                        <h:outputLabel for="password" value="#{bundle['login.password']}:" />  
                         <h:inputSecret id="password" label="password"   
                                     value="#{credentials.password}" required="true" />  
                           
                         <f:facet name="footer">  
                             <p:commandButton id="loginButton" value="Login" 
-                                         update=":messages,:detailform:collection,:logoutform"   
+                                         update=":messages,:logoutform"   
                                  actionListener="#{login.login}"   
                                      oncomplete="handleLoginRequest(xhr, status, args)"/>  
                         </f:facet>  
