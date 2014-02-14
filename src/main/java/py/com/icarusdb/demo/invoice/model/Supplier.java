@@ -32,6 +32,8 @@ public class Supplier implements java.io.Serializable
     private String contactName;
     private Set<Invoice> invoices = new HashSet<Invoice>(0);
 
+    public Supplier() {}
+    
     @Id
     @GeneratedValue
     @Column(name = "id", unique = true, nullable = false)

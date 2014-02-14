@@ -3,9 +3,6 @@
  */
 package py.com.icarusdb.demo.session;
 
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
-
 import py.com.icarusdb.demo.util.AppHelper;
 import py.com.icarusdb.demo.util.NavigationRulezHelper;
 
@@ -13,9 +10,7 @@ import py.com.icarusdb.demo.util.NavigationRulezHelper;
  * @author rgamarra
  *
  */
-@Named
-@RequestScoped
-public class NavigationRulez
+public abstract class NavigationRulez
 {
     public String getModuleUri()
     {
@@ -27,15 +22,18 @@ public class NavigationRulez
         return NavigationRulezHelper.ROOT;
     }
     
-    public String goHome()
+    /**
+     * for redirecting use
+     * @return
+     */
+    public String goIndex()
     {
-        return NavigationRulezHelper.HOME;
+        return AppHelper.getDomainUrl() + NavigationRulezHelper.INDEX_JSF;
     }
     
-    public String goDepositoEdit()
-    {
-        return "/admin/deposito.xhtml"+NavigationRulezHelper.FACES_REDIRECT;
-    }
-    
+//    public String goHome()
+//    {
+//        return NavigationRulezHelper.HOME;
+//    }
     
 }

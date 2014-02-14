@@ -6,6 +6,7 @@
     
     <h:form id="menubar_form" styleClass="containerWidth" >
 
+        <p:outputPanel autoUpdate="true">
         <table class="containerWidth">
             <tr>
                 <td class="menuWidth" >
@@ -14,20 +15,20 @@
                         <p:menuitem id="mi-home" value="home" icon="ui-icon-home"
                                    url="#{navigationRulez.moduleUri}" />  
                         
-                        <p:submenu icon="ui-icon-bookmark"  
+                        <p:submenu icon="ui-icon-bookmark" rendered="#{loggedIn}" 
                             label="#{bundle['invoices']}">  
                             
                             <p:menuitem id="mi-add-invoice" icon="ui-icon-circle-plus"  
                                      value="#{bundle['add']} #{bundle['invoice']}" 
-                                      ajax="false" action="#" />
+                                      ajax="false" action="#{navigationRulez.goAddInvoice()}" />
                                         
                             <p:menuitem id="mi-pending-invoice" icon="ui-icon-circle-check" 
                                      value="#{bundle['invoice.pending']}" 
-                                      ajax="false" action="#" />
+                                      ajax="false" action="#{navigationRulez.goPendingInvoices()}" />
                                         
                         </p:submenu>  
                           
-                        <p:submenu label="#{bundle['queries']}" icon="ui-icon-search">
+                        <p:submenu label="#{bundle['queries']}" icon="ui-icon-search" rendered="#{loggedIn}">
                         
                             <p:menuitem value="Op..1" ajax="false" action="#" />  
                                       
@@ -35,7 +36,7 @@
                                       
                         </p:submenu>  
                           
-                        <p:submenu label="#{bundle['admin']}" >
+                        <p:submenu label="#{bundle['admin']}" rendered="#{loggedIn}">
                         
                             <p:menuitem value="Op..1" ajax="false" action="#" />  
                                       
@@ -61,7 +62,7 @@
                                       
                         </p:submenu>  
             
-                        <p:submenu icon="ui-icon-star" label="about">  
+                        <p:submenu icon="ui-icon-star" label="about" rendered="#{loggedIn}">  
                             <p:menuitem value="#{bundle['label.about']}" url="#" 
                                       onclick="about.show();" />  
                         </p:submenu>  
@@ -81,6 +82,7 @@
                 </td>
             </tr>
         </table>
+        </p:outputPanel>
     
     </h:form>
 

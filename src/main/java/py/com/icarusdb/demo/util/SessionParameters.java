@@ -39,6 +39,18 @@ public class SessionParameters extends GlobalParameters
         return ACTION_MENU_USERSETTING;
     }
     
+    // Invoice menu
+    public final static String ACTION_MENU_INVOICE = "ACTION_MENU_INVOICE";
+    public final static String ACTION_ADD_INVOICE = "ACTION_ADD_INVOICE";
     
+    @Produces @Named final String getActionMenuInvoice()
+    {
+        return ACTION_MENU_INVOICE;
+    }
+    
+    @Produces @Named final String getActionAddInvoice()
+    {
+        return ACTION_ADD_INVOICE;
+    }
     
 }

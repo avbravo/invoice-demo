@@ -23,7 +23,7 @@ public class InvoiceDetail implements java.io.Serializable
     /**
      * 
      */
-    private static final long serialVersionUID = -6094092167064145465L;
+    private static final long serialVersionUID = 7049975613369955843L;
     
     private InvoiceDetailId id;
     private Invoice invoice;
@@ -33,6 +33,18 @@ public class InvoiceDetail implements java.io.Serializable
     private BigDecimal iva05;
     private BigDecimal iva10;
     private BigDecimal exempt;
+
+    public InvoiceDetail() 
+    {
+        this.amount = 1;
+    }
+    
+    public InvoiceDetail(InvoiceDetailId id) 
+    {
+        this.id = id;
+        this.amount = 1;
+    }
+    
 
     @EmbeddedId
     @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "id", nullable = false)), @AttributeOverride(name = "invoice", column = @Column(name = "invoice", nullable = false)) })

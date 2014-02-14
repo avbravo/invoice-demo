@@ -20,6 +20,7 @@ public class NavigationRulezHelper
     
     public static final String HOME = "/home.xhtml" + FACES_REDIRECT;
 
+    public static final String INDEX_JSF = "/index.jsf";
     
     
     public static void redirect(String url)

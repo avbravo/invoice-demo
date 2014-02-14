@@ -32,6 +32,8 @@ public class Item implements java.io.Serializable
     private Integer minimunStock;
     private Set<InvoiceDetail> invoiceDetails = new HashSet<InvoiceDetail>(0);
 
+    public Item() {}
+    
     @Id
     @GeneratedValue
     @Column(name = "id", unique = true, nullable = false)
