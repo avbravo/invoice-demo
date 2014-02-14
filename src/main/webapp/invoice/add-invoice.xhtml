@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/resources/template.xhtml">
+    
+        <ui:define name="content" > 
+            
+            <h:form id="editform" styleClass="contentWidth" >
+            
+                <!-- data panel -->
+                <p:panel id="datapanel" style="min-height: 100px; " 
+                     header="#{invoiceEditController.actionSubTitle} #{bundle['invoice']}">
+                         
+                    <p:focus />
+                    <p:panelGrid id="datapanelg" columns="2" >
+                        
+                        <h:outputLabel for="supplier" value="#{bundle['supplier']}" />
+                        <h:selectOneMenu id="supplier" immediate="true"
+                                      value="#{invoiceEditController.supplier}">
+                            <f:selectItem noSelectionValue="true" itemValue=""
+                                          itemLabel="#{bundle['label.selection.select']}"/>
+                            <f:selectItems id="suppliers" value="#{suppliers}"  
+                                          var="_supplier" 
+                                    itemValue="#{_supplier}"
+                                    itemLabel="#{_supplier.name}" />
+                        </h:selectOneMenu>
+
+                      <h:outputLabel for="invoiceDate" style="width: 115px;"
+                                     value="#{bundle['supplier.date']}" />
+                        <p:calendar id="invoiceDate" pattern="#{datePattern}" 
+                                  size="8" effect="blind" required="true" navigator="true"
+                        requiredMessage="#{bundle['error.required.value']} #{bundle['invoice.date']}"
+                                 value="#{invoiceEditController.selectedRow.invoiceDate}"/>
+
+                        <h:outputLabel for="invoiceNumber" value="#{bundle['invoice.number']}" />
+                        <p:inputText id="invoiceNumber" required="true" size="15"
+                               readonly="#{invoiceEditController.view}" 
+                               disabled="#{invoiceEditController.view}" 
+                                  value="#{invoiceEditController.selectedRow.number}"/>
+                    
+                    </p:panelGrid>
+                </p:panel>
+
+                <p:panel id="collectionpanel" style="min-height: 100px; " 
+                     header="#{bundle['invoice.details']}">
+                     
+                    <p:commandButton id="adddetailbutton" icon="ui-icon-plus" 
+                                  value="#{bundle['add']} #{bundle['invoice.detail']}"  
+                                 actionListener="#{invoiceEditController.addDetail}" 
+                                 update=":editform:display" 
+                             oncomplete="addDetailDialog.show()"  />
+            
+                    <p:dataTable id="datatablecollection" 
+                                var="_detail" rowIndexVar="_indexVar" rows="#{searchMaxResutl}" 
+                          paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false"
+                              value="#{invoiceEditController.details}">
+                        
+                        <p:column width="50" 
+                             headerText="#{bundle['invoice.detail.amount']}" >
+                             <div align="right">
+                                <h:outputText value="#{_detail.amount}" />
+                             </div>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['item.description']}" >
+                            <h:outputText value="#{_detail.item.description}" />
+                        </p:column>
+                                                
+                        <p:column width="70"   
+                             headerText="#{bundle['invoice.detail.unitPrice']}">
+                            <div align="right">
+                                <h:outputText value="#{_detail.unitPrice}" />
+                            </div>
+                        </p:column>
+                        
+                        <p:column width="70" headerText="#{bundle['exempt']}" >
+                            <div align="right">
+                                <h:outputText value="#{_detail.exempt}" />
+                            </div>
+                        </p:column>
+                        
+                        <p:column width="70" headerText="#{bundle['iva05']}" >
+                            <div align="right">
+                                <h:outputText value="#{_detail.iva05}" />
+                            </div>
+                        </p:column>
+                        
+                        <p:column width="70" headerText="#{bundle['iva10']}" >
+                            <div align="right">
+                                <h:outputText value="#{_detail.iva10}" />
+                            </div>
+                        </p:column>
+                        
+                        <p:column width="100" style="text-align: center;" 
+                             headerText="#{bundle['actions']}" >
+                        
+                            <p:commandButton id="deletelink" immediate="true" icon="ui-icon-close" 
+                                       update=":editform:datatablecollection"
+                                     rendered="#{credentials.hasRol('delete')}"
+                                      onclick="if (!confirm('#{bundle['label.confirm.delete']}','#{bundle['button.label.delete']}')) return false" 
+                                       action="#{invoiceEditController.delete(_indexVar)}" />                            
+                            
+                        </p:column>
+ 
+                    </p:dataTable>  
+                    <p:spacer height="10px" />
+                         
+                </p:panel>
+                
+                <!-- action buttons panel -->
+                <p:panel id="buttonspanel">
+                    <p:spacer height="10px" />
+                    <h:panelGroup id="buttonsgroup">
+                    
+                        <p:commandButton id="savebutton" value="#{bundle['button.label.save']}"  
+                                       icon="ui-icon-document"  
+                                     action="#{invoiceEditController.save}" />
+            
+                        <p:commandButton id="cancelbutton" value="#{bundle['button.label.cancel']}"  
+                                       icon="ui-icon-document" ajax="false" immediate="true" 
+                                     action="#{invoiceEditController.init}" />
+            
+                        <p:commandButton id="closebutton" value="#{bundle['button.label.close']}" 
+                                       icon="ui-icon-close" ajax="false" immediate="true"
+                             actionListener="#{invoiceEditController.clear}"
+                                     action="#{navigationRulez.goIndex()}"/>
+                    </h:panelGroup>
+                    
+                </p:panel>
+                
+                
+                <p:dialog id="addDetailDlg" widgetVar="addDetailDialog"
+                       modal="true" resizable="false" 
+                  showEffect="fade" hideEffect="explode" 
+                       width="400" minHeight="500" >
+                    
+                    <p:ajax event="close" update=":editform:collectionpanel" />
+                    
+                    <p:spacer height="5px"/>
+                    <p:panel id="display" 
+                         header="#{bundle.add} #{bundle['invoice.detail']}">
+                        
+                        <p:spacer height="8px"/>
+                        <h:panelGrid columns="2" >
+                        
+                            <h:outputLabel for="amount" value="#{bundle['invoice.detail.amount']}" >
+                                     <span class="required">*</span>
+                            </h:outputLabel>
+                            <p:inputText size="10" styleClass="numeric" id="amount" immediate="true"
+                                        value="#{invoiceEditController.detail.amount}" /> 
+                                  
+                            <h:outputLabel for="item" value="#{bundle['item']}" >
+                                     <span class="required">*</span>
+                            </h:outputLabel>
+                            <p:inputText size="10" styleClass="numeric" id="item" immediate="true"
+                                        value="#{invoiceEditController.detail.item}" /> 
+
+                            <h:outputLabel for="unitPrice" value="#{bundle['invoice.detail.unitPrice']}" >
+                                     <span class="required">*</span>
+                            </h:outputLabel>
+                            <p:inputText size="10" styleClass="numeric" id="unitPrice" immediate="true"
+                                        value="#{invoiceEditController.detail.unitPrice}" /> 
+
+                            <h:outputLabel for="type" value="#{bundle['invoice.detail.tax']}" >
+                                     <span class="required">*</span>
+                            </h:outputLabel>
+                            <p:selectOneMenu id="type" value="#{invoiceEditController.tax}" immediate="true" >
+                                <f:selectItem itemValue="#{bundle.exempt}" itemLabel="#{bundle.exempt}"/>
+                                <f:selectItem itemValue="#{bundle.iva05}" itemLabel="#{bundle.iva05}"/>
+                                <f:selectItem itemValue="#{bundle.iva10}" itemLabel="#{bundle.iva10}"/>
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+                        
+                        <p:spacer height="10px" />
+                        <div align="center">
+                            <p:commandButton id="canceladd" immediate="true" 
+                                          value="#{bundle['button.label.cancel']}" 
+                                     oncomplete="addDetailDialog.hide()" 
+                                         action="#{invoiceEditController.cancelAddDetail}" />
+                            
+                            <p:spacer width="20px"/>
+                            <p:commandButton id="saveadd" immediate="true" 
+                                          value="#{bundle['button.label.save']}" 
+                                     oncomplete="addDetailDialog.hide()"
+                                         update=":editform:collectionpanel"
+                                         action="#{invoiceEditController.confirmAddDetail}" />
+                        </div>
+                                                
+                    </p:panel>
+                </p:dialog>                
+                
+            </h:form>
+
+        </ui:define>
+        
+    </ui:composition>
+    
+</html>
