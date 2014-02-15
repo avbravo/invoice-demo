@@ -7,7 +7,12 @@
 
     <ui:composition template="/resources/template.xhtml">
     
+        
+        <ui:include src="/panels/supplierSearchPanel.xhtml" />
+        
         <ui:define name="content" > 
+        
+            <ui:include src="/panels/supplierSearchPanel.xhtml" />
             
             <h:form id="editform" styleClass="contentWidth" >
             
@@ -19,16 +24,19 @@
                     <p:panelGrid id="datapanelg" columns="2" >
                         
                         <h:outputLabel for="supplier" value="#{bundle['supplier']}" />
-                        <h:selectOneMenu id="supplier" immediate="true"
-                                      value="#{invoiceEditController.supplier}">
-                            <f:selectItem noSelectionValue="true" itemValue=""
-                                          itemLabel="#{bundle['label.selection.select']}"/>
-                            <f:selectItems id="suppliers" value="#{suppliers}"  
-                                          var="_supplier" 
-                                    itemValue="#{_supplier}"
-                                    itemLabel="#{_supplier.name}" />
-                        </h:selectOneMenu>
-
+                        <h:panelGroup id="supplier-grouping">
+                            <p:outputPanel autoUpdate="true">
+                                <p:inputText id="supplier" readonly="true" disabled="true" size="20" required="true"
+                                          requiredMessage="#{bundle['error.required.value']} #{bundle['supplier']}"
+                                          value="#{supplierSearchPanel.selectedEntity.name}"/>
+                                <p:commandButton id="searchbutton_supplier" icon="ui-icon-search"  
+                                             update=":supplierpanelform:display" 
+                                            process="searchbutton_supplier"
+                                            action="#{invoiceEditController.preparePanel('supplier')}"
+                                         oncomplete="supplierDialog.show()"/> 
+                            </p:outputPanel>
+                        </h:panelGroup>
+                        
                       <h:outputLabel for="invoiceDate" style="width: 115px;"
                                      value="#{bundle['supplier.date']}" />
                         <p:calendar id="invoiceDate" pattern="#{datePattern}" 
@@ -135,7 +143,7 @@
                 
                 <p:dialog id="addDetailDlg" widgetVar="addDetailDialog"
                        modal="true" resizable="false" 
-                  showEffect="fade" hideEffect="explode" 
+                  showEffect="puff" hideEffect="explode" 
                        width="400" minHeight="500" >
                     
                     <p:ajax event="close" update=":editform:collectionpanel" />

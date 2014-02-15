@@ -17,6 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import py.com.icarusdb.demo.invoice.controller.panel.SupplierSearchPanel;
 import py.com.icarusdb.demo.invoice.data.DatabaseManager;
 import py.com.icarusdb.demo.invoice.model.Invoice;
 import py.com.icarusdb.demo.invoice.model.InvoiceDetail;
@@ -51,6 +52,9 @@ public class InvoiceEditController extends BaseController implements EditControl
     
     @Inject 
     private InvoiceDemoNavigationRulez navigationRulez;
+    
+    @Inject 
+    private SupplierSearchPanel supplierSearchPanel;
     
     
     
@@ -110,6 +114,7 @@ public class InvoiceEditController extends BaseController implements EditControl
         logger.log(Level.INFO, "init::" + this.getClass().getName());
 //        logger.log(Level.INFO, "action: " + action);
         
+        supplierSearchPanel.clear();
     }
     
     public void clear()
@@ -121,6 +126,17 @@ public class InvoiceEditController extends BaseController implements EditControl
     public Invoice getSelectedRow()
     {
         return selectedRow;
+    }
+    
+    /**
+     * added because we will use it to persist new suppliers
+     * normally these panels don't have the setter and save functionally
+     * maybe they will sometime soon
+     * @param selectedRow
+     */
+    public void setSelectedRow(Invoice selectedRow)
+    {
+        this.selectedRow = selectedRow;
     }
     
     public InvoiceDetail getDetail()
@@ -260,4 +276,19 @@ public class InvoiceEditController extends BaseController implements EditControl
     {
         details.remove(index);
     }
+    
+    
+    public void preparePanel(String panelname)
+    {
+        if("supplier".equalsIgnoreCase(panelname))
+        {
+            supplierSearchPanel.setTagId2update(":editform");
+        }
+    }
+    
+    
+    
+    
+    
+    
 }

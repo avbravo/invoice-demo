@@ -34,7 +34,7 @@ public class Invoice implements EntityInterface
     /**
      * 
      */
-    private static final long serialVersionUID = 7642729188313253804L;
+    private static final long serialVersionUID = 5602514763693442402L;
     
     private Long id;
     private Supplier supplier;
@@ -44,9 +44,12 @@ public class Invoice implements EntityInterface
     private BigDecimal totalIva05;
     private BigDecimal totalIva10;
     private BigDecimal totalExempt;
+    private boolean processed;
     private Set<InvoiceDetail> invoiceDetails = new HashSet<InvoiceDetail>(0);
 
-    public Invoice() {}
+    public Invoice() {
+        this.processed = false;
+    }
     
     @Id
     @GeneratedValue
@@ -138,6 +141,17 @@ public class Invoice implements EntityInterface
     public void setTotalExempt(BigDecimal totalExempt)
     {
         this.totalExempt = totalExempt;
+    }
+    
+    @Column(name = "ruc", nullable = false)
+    public boolean isProcessed()
+    {
+        return processed;
+    }
+    
+    public void setProcessed(boolean processed)
+    {
+        this.processed = processed;
     }
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice")

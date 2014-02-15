@@ -7,7 +7,7 @@
     <h:form id="menubar_form" styleClass="containerWidth" >
 
         <p:outputPanel autoUpdate="true">
-        <table class="containerWidth">
+        <table class="containerWidth" >
             <tr>
                 <td class="menuWidth" >
                     <p:menubar id="bar_mainmenu" >  
@@ -70,15 +70,13 @@
                     </p:menubar>  
                     </td>
                 <td >
-                    <div align="right">
                     <p:outputPanel autoUpdate="true">
-                        <p:menubar id="bar_logout" 
+                        <p:menubar id="bar_logout" style="width: 65px; align: left;"
                              rendered="#{login.loggedIn}" >  
-                            <p:menuitem id="logout" value="Logout " icon="ui-icon-close"
+                            <p:menuitem id="logout" value="Logout" icon="ui-icon-close"
                                    ajax="false" action="#{login.logout}" />
                         </p:menubar>
                     </p:outputPanel>
-                    </div>
                 </td>
             </tr>
         </table>

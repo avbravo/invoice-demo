@@ -54,12 +54,12 @@ body {
 
 #content {
     float: left;
-    width: 98%; /*800px;*/
+    width: 92%; /*800px;*/
     margin: 20px;
 }
 
 .contentWidth {
-    width: 98%; /*800px;*/
+    width: 92%; /*800px;*/
     min-height:300px;
 }
 
