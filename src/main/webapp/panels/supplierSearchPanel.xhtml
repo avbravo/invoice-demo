@@ -1,0 +1,150 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+        
+    <p:dialog id="supplierDlg" widgetVar="supplierDialog"
+          header="#{bundle['search.label.searching']} #{bundle['supplier']}" 
+           modal="true" resizable="false" position="top"
+      showEffect="slide" hideEffect="slide" 
+       minHeight="300" width="500">
+        
+        <p:ajax event="close" listener="#{supplierSearchPanel.handleClose}" />
+        
+        <h:form id="supplierpanelform">
+        
+            <p:panel id="display">
+            
+                <p:panel id="supplierpanelsearch" header="#{bundle['search.label.lookup']}" >
+                    <h:panelGrid columns="2">
+                        <h:outputLabel for="ruc" value="#{bundle['label.ruc']}" />
+                        <p:inputText id="ruc" size="20" 
+                                  value="#{supplierSearchPanel.ruc}" />
+                                  
+                        <h:outputLabel for="name" value="#{bundle['label.name']}" />
+                        <p:inputText id="name" size="20"
+                                  value="#{supplierSearchPanel.name}" />
+                        
+                    </h:panelGrid>
+                    <table style="width: 100%;">
+                        <tr valign="middle" >
+                            <td align="center">
+                                <p:commandButton id="search" update="panelcollection" 
+                                              value="#{bundle['search.label.lookup']}"
+                                              action="#{supplierSearchPanel.search}"/>
+                                </td>
+                            <td align="right">
+                                <p:commandButton id="add" update=":addsupplierform:display" 
+                                              value="#{bundle['add']}"
+                                     actionListener="#{supplierSearchPanel.prepareNew}"
+                                         oncomplete="addSupplierDialog.show()"/>
+                            </td>
+                        </tr>
+                    </table>
+                </p:panel>
+                
+                <p:spacer id="sp1" height="10"/>
+                <p:panel id="panelcollection" header="#{bundle['suppliers']}">
+                
+                    <p:dataTable id="supplierpanelcollection" 
+                         scrollable="true" scrollRows="#{searchMaxResutl}" liveScroll="true" scrollHeight="100" 
+                              value="#{supplierSearchPanel.resultList}" var="supplier"
+                           rendered="#{not empty supplierSearchPanel.resultList}">
+                    
+                        <p:column headerText="#{bundle['label.ruc']}" width="50">
+                            <div align="center">
+                            <h:outputText value="#{supplier.ruc}" />
+                            </div>
+                        </p:column>
+                        
+                        <p:column headerText="#{bundle['label.name']}" width="200">
+                            <h:outputText value="#{supplier.name}" />
+                        </p:column>
+                        
+                        <p:column headerText="#{bundle['label.actions']}" 
+                                  width="80" style="text-align:center;">
+                        
+                            <p:commandLink id="selectlinklist" immediate="true" 
+                                     rendered="#{not supplierSearchPanel.edition}"
+                                        value="#{bundle['button.label.select']}" 
+                                   oncomplete="supplierDialog.hide()"
+                                       update="#{supplierSearchPanel.tagId2update}" >
+                                <f:setPropertyActionListener value="#{supplier}"
+                                                            target="#{supplierSearchPanel.selectedEntity}" />
+                            </p:commandLink>
+                            
+                            <p:commandLink id="selectlinkedit" immediate="true" 
+                                     rendered="#{supplierSearchPanel.edition}"
+                                        value="#{bundle['button.label.select']}" 
+                                   oncomplete="supplierDialog.hide()"
+                                       update="#{supplierSearchPanel.tagId2update}" >
+                                <f:setPropertyActionListener value="#{supplier}"
+                                                            target="#{supplierSearchPanel.selectedEntity}" />
+                            </p:commandLink>
+                            
+                        </p:column>                    
+                    
+                    </p:dataTable>
+                
+                </p:panel>
+                
+            </p:panel>
+            
+        </h:form>
+        
+        <p:dialog id="addsupplierDlg" 
+              header="#{bundle['add']} #{bundle['supplier']}" 
+               draggable="true" widgetVar="addSupplierDialog"
+              showEffect="fade" hideEffect="fade" resizable="false">
+              
+            <h:form id="addsupplierform">
+
+                <p:spacer height="10px" />
+                <p:panel id="display">
+                    <h:panelGrid columns="2" style="width:100%; text-align:center;" 
+                                 rendered="#{supplierSearchPanel.selected}">
+                    
+                        <p:outputLabel for="suppliername" value="#{bundle['label.name']}" />
+                        <h:inputText id="suppliername" size="30" required="true" 
+                            value="#{supplierSearchPanel.selectedEntity.name}" />
+                    
+                        <p:outputLabel for="supplierruc" value="#{bundle['label.ruc']}" />
+                        <h:inputText id="supplierruc" size="30" required="true"  
+                            value="#{supplierSearchPanel.selectedEntity.ruc}" />
+                    
+                        <p:outputLabel for="supplieraddress" value="#{bundle['label.address']}" />
+                        <h:inputText id="supplieraddress" size="30"  
+                            value="#{supplierSearchPanel.selectedEntity.address}" />
+                    
+                        <p:outputLabel for="suppliertelephone" value="#{bundle['label.telephone']}" />
+                        <h:inputText id="suppliertelephone" size="30"  
+                            value="#{supplierSearchPanel.selectedEntity.telephone}" />
+                    
+                    </h:panelGrid>
+                </p:panel>
+                    <div align="right">
+                        <p:commandButton id="cancel" value="#{bundle['button.label.cancel']}"
+                                     action="#{supplierSearchPanel.clear}" process="cancel"
+                                 oncomplete="addSupplierDialog.hide();"/>
+                        <p:spacer width="10px"/>
+                        <p:commandButton id="save" value="#{bundle['button.label.save']}"
+                             actionListener="#{supplierSearchPanel.save}"
+                                 oncomplete="checkInfoData(xhr, status, args)"/>
+                    </div>
+            </h:form>
+        </p:dialog>
+        
+        <script type="text/javascript">  
+            function checkInfoData(xhr, status, args) {  
+                if(args.validationFailed) {  
+                    jQuery('#addsupplierDlg').effect("shake", { times:3 }, 100);  
+                } else {  
+                    addSupplierDialog.hide(); 
+                    supplierDialog.hide();
+                }  
+            }  
+        </script>              
+        
+    </p:dialog>        
+</ui:composition>

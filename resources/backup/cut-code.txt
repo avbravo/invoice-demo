@@ -1,0 +1,10 @@
+                        <h:selectOneMenu id="supplier" immediate="true" rendered="false"
+                                      value="#{invoiceEditController.supplier}">
+                            <f:selectItem noSelectionValue="true" itemValue=""
+                                          itemLabel="#{bundle['label.selection.select']}"/>
+                            <f:selectItems id="suppliers" value="#{suppliers}"  
+                                          var="_supplier" 
+                                    itemValue="#{_supplier}"
+                                    itemLabel="#{_supplier.name}" />
+                        </h:selectOneMenu>
+

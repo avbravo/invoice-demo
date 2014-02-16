@@ -5,14 +5,14 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets">
 
-    <ui:composition template="/resources/templates/dashboard.xhtml">
+    <ui:composition template="/resources/template.xhtml">
     
         <ui:define name="content">
             <h:form>
                 <h:outputText value="#{bundle['error.view.expired']}" />
-                <p>You were on page #{currentViewId}. Maybe that's useful.</p>
+                <!--p>You were on page #{currentViewId}. Maybe that's useful.</p-->
                 <p>
-                    Please re-login via the
+                    #{bundle['please.relogin']} via
                     <h:outputLink styleClass="homepagelink"
                                   value="#{request.contextPath}/index.xhtml">
                         <h:outputText value="Homepage" />

@@ -5,7 +5,9 @@ package py.com.icarusdb.demo.invoice.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -19,7 +21,11 @@ public class SystemUser implements java.io.Serializable
      * 
      */
     private static final long serialVersionUID = -1801439191303066926L;
-    
+
+
+    private static final String GENERATOR = "SYSTEMUSER_ID_GENERATOR";
+
+
     private Long id;
     private String username;
     private String password;
@@ -36,7 +42,8 @@ public class SystemUser implements java.io.Serializable
     }
 
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name = GENERATOR, sequenceName = "public.system_user_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GENERATOR)
     @Column(name = "id", unique = true, nullable = false)
     public Long getId()
     {

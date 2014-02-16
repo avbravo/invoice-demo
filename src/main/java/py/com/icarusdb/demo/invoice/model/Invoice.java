@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -143,7 +144,7 @@ public class Invoice implements EntityInterface
         this.totalExempt = totalExempt;
     }
     
-    @Column(name = "ruc", nullable = false)
+    @Column(name = "processed", nullable = false)
     public boolean isProcessed()
     {
         return processed;
@@ -154,7 +155,7 @@ public class Invoice implements EntityInterface
         this.processed = processed;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "invoice", cascade=CascadeType.ALL)
     public Set<InvoiceDetail> getInvoiceDetails()
     {
         return this.invoiceDetails;

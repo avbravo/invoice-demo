@@ -4,6 +4,7 @@
 package py.com.icarusdb.demo.invoice.controller;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -17,6 +18,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import py.com.icarusdb.demo.invoice.controller.panel.ItemSearchPanel;
 import py.com.icarusdb.demo.invoice.controller.panel.SupplierSearchPanel;
 import py.com.icarusdb.demo.invoice.data.DatabaseManager;
 import py.com.icarusdb.demo.invoice.model.Invoice;
@@ -30,7 +32,6 @@ import py.com.icarusdb.demo.util.BaseController;
 import py.com.icarusdb.demo.util.EditController;
 import py.com.icarusdb.demo.util.MessageUtil;
 import py.com.icarusdb.demo.util.NavigationRulezHelper;
-import py.com.icarusdb.demo.util.SessionParameters;
 
 /**
  * @author mcrose
@@ -56,6 +57,8 @@ public class InvoiceEditController extends BaseController implements EditControl
     @Inject 
     private SupplierSearchPanel supplierSearchPanel;
     
+    @Inject
+    private ItemSearchPanel itemSearchPanel;
     
     
     private Invoice selectedRow = null;
@@ -67,7 +70,7 @@ public class InvoiceEditController extends BaseController implements EditControl
     
     private String tax = null; // TODO make it enum
     
-   
+//    private Item item = null;
     
     
     @Override
@@ -169,7 +172,15 @@ public class InvoiceEditController extends BaseController implements EditControl
         this.tax = impuesto;
     }
     
-    
+//    public Item getItem()
+//    {
+//        return item;
+//    }
+//    
+//    public void setItem(Item item)
+//    {
+//        this.item = item;
+//    }
     
     
     
@@ -184,7 +195,12 @@ public class InvoiceEditController extends BaseController implements EditControl
             if(!check()) return null;
             
             selectedRow.setNumber(selectedRow.getNumber().trim());
-            selectedRow.setSupplier(supplier);
+            selectedRow.setSupplier(supplierSearchPanel.getSelectedEntity());
+
+            calculateTotals();
+            
+            selectedRow.getInvoiceDetails().clear();
+            selectedRow.getInvoiceDetails().addAll(details);
             
 //            selectedRow.setUsuUltmod(credentials.getUsername());
 //            selectedRow.setFecUltmod(CalendarHelper.getCurrentTimestamp());
@@ -220,9 +236,31 @@ public class InvoiceEditController extends BaseController implements EditControl
         return null;
     }
 
+    private void calculateTotals()
+    {
+        BigDecimal totalExempt = BigDecimal.ZERO;
+        BigDecimal totalIva05 = BigDecimal.ZERO;
+        BigDecimal totalIva10 = BigDecimal.ZERO;
+        
+        for(InvoiceDetail detail : details)
+        {
+            totalExempt = totalExempt.add(detail.getExempt()==null?BigDecimal.ZERO:detail.getExempt());
+            totalIva05 = totalIva05.add(detail.getIva05()==null?BigDecimal.ZERO:detail.getIva05());
+            totalIva10 = totalIva10.add(detail.getIva10()==null?BigDecimal.ZERO:detail.getIva10());
+        }
+        
+        BigDecimal totalAmount = totalExempt.add(totalIva05).add(totalIva10);
+        
+        selectedRow.setTotalAmount(totalAmount);
+        selectedRow.setTotalExempt(totalExempt);
+        selectedRow.setTotalIva05(totalIva05);
+        selectedRow.setTotalIva10(totalIva10);
+        
+    }
+
     private boolean check()
     {
-        if(supplier == null)
+        if(supplierSearchPanel.getSelectedEntity() == null)
         {
             MessageUtil.addFacesMessage("error.required.supplier");
             return false;
@@ -263,13 +301,33 @@ public class InvoiceEditController extends BaseController implements EditControl
     public void confirmAddDetail()
     {
         detail.setInvoice(selectedRow);
+        detail.setItem(itemSearchPanel.getSelectedEntity());
+        
+        BigDecimal totalprice = detail.getUnitPrice().multiply(new BigDecimal(detail.getAmount()));
+        
+        if("exempt".equalsIgnoreCase(tax))
+        {
+            detail.setExempt(totalprice);
+        }
+        if("iva05".equalsIgnoreCase(tax))
+        {
+            detail.setIva05(totalprice);
+        }
+        if("iva10".equalsIgnoreCase(tax))
+        {
+            detail.setIva10(totalprice);
+        }
+        
         details.add(detail);
-        detail = null;
+        
+        cancelAddDetail();
     }
 
     public void cancelAddDetail()
     {
         detail = null;
+//        item = null;
+        itemSearchPanel.clear();
     }
 
     public void delete(int index)
@@ -283,6 +341,10 @@ public class InvoiceEditController extends BaseController implements EditControl
         if("supplier".equalsIgnoreCase(panelname))
         {
             supplierSearchPanel.setTagId2update(":editform");
+        }
+        if("item".equalsIgnoreCase(panelname))
+        {
+            itemSearchPanel.setTagId2update(":editform");
         }
     }
     

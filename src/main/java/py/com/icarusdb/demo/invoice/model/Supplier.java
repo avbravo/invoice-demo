@@ -10,8 +10,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -29,7 +31,11 @@ public class Supplier implements EntityInterface
      * 
      */
     private static final long serialVersionUID = 1882825950810417201L;
-    
+
+
+    private static final String GENERATOR = "SUPPLIER_ID_GENERATOR";
+
+
     private Long id;
     private String name;
     private String ruc;
@@ -41,7 +47,8 @@ public class Supplier implements EntityInterface
     public Supplier() {}
     
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name = GENERATOR, sequenceName = "public.supplier_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GENERATOR)
     @Column(name = "id", unique = true, nullable = false)
     public Long getId()
     {

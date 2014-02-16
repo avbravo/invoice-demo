@@ -9,6 +9,7 @@
     
         
         <ui:include src="/panels/supplierSearchPanel.xhtml" />
+        <ui:include src="/panels/itemSearchPanel.xhtml" />
         
         <ui:define name="content" > 
         
@@ -58,8 +59,9 @@
                      
                     <p:commandButton id="adddetailbutton" icon="ui-icon-plus" 
                                   value="#{bundle['add']} #{bundle['invoice.detail']}"  
-                                 actionListener="#{invoiceEditController.addDetail}" 
-                                 update=":editform:display" 
+                                 action="#{invoiceEditController.addDetail}" 
+                                 update=":addDetailForm:display" process="adddetailbutton"
+                               disabled="#{not supplierSearchPanel.selected}"
                              oncomplete="addDetailDialog.show()"  />
             
                     <p:dataTable id="datatablecollection" 
@@ -104,7 +106,7 @@
                         </p:column>
                         
                         <p:column width="100" style="text-align: center;" 
-                             headerText="#{bundle['actions']}" >
+                             headerText="#{bundle['label.actions']}" >
                         
                             <p:commandButton id="deletelink" immediate="true" icon="ui-icon-close" 
                                        update=":editform:datatablecollection"
@@ -126,6 +128,7 @@
                     
                         <p:commandButton id="savebutton" value="#{bundle['button.label.save']}"  
                                        icon="ui-icon-document"  
+                                   disabled="#{not supplierSearchPanel.selected}"
                                      action="#{invoiceEditController.save}" />
             
                         <p:commandButton id="cancelbutton" value="#{bundle['button.label.cancel']}"  
@@ -141,15 +144,20 @@
                 </p:panel>
                 
                 
-                <p:dialog id="addDetailDlg" widgetVar="addDetailDialog"
-                       modal="true" resizable="false" 
-                  showEffect="puff" hideEffect="explode" 
-                       width="400" minHeight="500" >
-                    
-                    <p:ajax event="close" update=":editform:collectionpanel" />
-                    
+            </h:form>
+
+            <p:dialog id="addDetailDlg" widgetVar="addDetailDialog"
+                   modal="true" resizable="false" 
+              showEffect="puff" hideEffect="explode" 
+                   width="400" minHeight="500" >
+                
+                <p:ajax event="close" update=":editform:collectionpanel" />
+                
+                <h:form id="addDetailForm">
+                        
                     <p:spacer height="5px"/>
-                    <p:panel id="display" 
+                    
+                    <p:panel id="display"  
                          header="#{bundle.add} #{bundle['invoice.detail']}">
                         
                         <p:spacer height="8px"/>
@@ -164,22 +172,37 @@
                             <h:outputLabel for="item" value="#{bundle['item']}" >
                                      <span class="required">*</span>
                             </h:outputLabel>
-                            <p:inputText size="10" styleClass="numeric" id="item" immediate="true"
-                                        value="#{invoiceEditController.detail.item}" /> 
+                            <h:panelGroup>
+                                <p:inputText size="10" id="item" readonly="true" disabled="true"
+                                            value="#{itemSearchPanel.selectedEntity.code}" /> 
+                                <p:commandButton id="searchbutton_item" icon="ui-icon-search"  
+                                             update=":itempanelform:display"
+                                            process="searchbutton_item"
+                                            action="#{invoiceEditController.preparePanel('item')}"
+                                         oncomplete="itemDialog.show()"/> 
+                            </h:panelGroup>
+                            
+                            <h:outputText value="  " rendered="#{itemSearchPanel.selected}"/>
+                            <h:outputText rendered="#{itemSearchPanel.selected}" 
+                                value="#{itemSearchPanel.selectedEntity.description}" />
 
                             <h:outputLabel for="unitPrice" value="#{bundle['invoice.detail.unitPrice']}" >
                                      <span class="required">*</span>
                             </h:outputLabel>
-                            <p:inputText size="10" styleClass="numeric" id="unitPrice" immediate="true"
-                                        value="#{invoiceEditController.detail.unitPrice}" /> 
+                            <p:inputText size="10" styleClass="numeric" id="unitPrice" 
+                                        value="#{invoiceEditController.detail.unitPrice}" >
+                                    <p:ajax event="blur" process="unitPrice"  
+                                            ignoreAutoUpdate="true" immediate="true"/>
+                            </p:inputText> 
 
                             <h:outputLabel for="type" value="#{bundle['invoice.detail.tax']}" >
                                      <span class="required">*</span>
                             </h:outputLabel>
-                            <p:selectOneMenu id="type" value="#{invoiceEditController.tax}" immediate="true" >
-                                <f:selectItem itemValue="#{bundle.exempt}" itemLabel="#{bundle.exempt}"/>
-                                <f:selectItem itemValue="#{bundle.iva05}" itemLabel="#{bundle.iva05}"/>
-                                <f:selectItem itemValue="#{bundle.iva10}" itemLabel="#{bundle.iva10}"/>
+                            <p:selectOneMenu id="type" value="#{invoiceEditController.tax}" >
+                                <f:selectItem itemValue="exempt" itemLabel="#{bundle.exempt}"/>
+                                <f:selectItem itemValue="iva05" itemLabel="#{bundle.iva05}"/>
+                                <f:selectItem itemValue="iva10" itemLabel="#{bundle.iva10}"/>
+                                <p:ajax event="change" execute="@this" />
                             </p:selectOneMenu>
                         </h:panelGrid>
                         
@@ -192,17 +215,157 @@
                             
                             <p:spacer width="20px"/>
                             <p:commandButton id="saveadd" immediate="true" 
-                                          value="#{bundle['button.label.save']}" 
+                                          value="#{bundle['add']}" 
                                      oncomplete="addDetailDialog.hide()"
                                          update=":editform:collectionpanel"
                                          action="#{invoiceEditController.confirmAddDetail}" />
                         </div>
                                                 
                     </p:panel>
-                </p:dialog>                
-                
-            </h:form>
+                    
+                </h:form>
+            </p:dialog>                
 
+    <p:dialog id="itemDlg" widgetVar="itemDialog"
+          header="#{bundle['search.label.searching']} #{bundle['item']}" 
+           modal="true" resizable="false" position="top"
+      showEffect="puff" hideEffect="clip" 
+       minHeight="300" width="500">
+        
+        <p:ajax event="close" listener="#{itemSearchPanel.handleClose}" />
+        
+        <h:form id="itempanelform">
+        
+            <p:panel id="display">
+            
+                <p:panel id="itempanelsearch" header="#{bundle['search.label.lookup']}" >
+                    <h:panelGrid columns="2">
+                        <h:outputLabel for="description" value="#{bundle['item.description']}" />
+                        <p:inputText id="description" size="20" 
+                                  value="#{itemSearchPanel.description}" />
+                                  
+                        <h:outputLabel for="code" value="#{bundle['item.code']}" />
+                        <p:inputText id="code" size="20"
+                                  value="#{itemSearchPanel.code}" />
+                        
+                    </h:panelGrid>
+                    <table style="width: 100%;">
+                        <tr valign="middle" >
+                            <td align="center">
+                                <p:commandButton id="search" update="panelcollection" 
+                                              value="#{bundle['search.label.lookup']}"
+                                              action="#{itemSearchPanel.search}"/>
+                                </td>
+                            <td align="right">
+                                <p:commandButton id="add" update=":additemform:display" 
+                                              value="#{bundle['add']}"
+                                     actionListener="#{itemSearchPanel.prepareNew}"
+                                         oncomplete="addItemDialog.show()"/>
+                            </td>
+                        </tr>
+                    </table>
+                </p:panel>
+                
+                <p:spacer id="sp1" height="10"/>
+                <p:panel id="panelcollection" header="#{bundle['items']}">
+                
+                    <p:dataTable id="itempanelcollection" 
+                         scrollable="true" scrollRows="#{searchMaxResutl}" liveScroll="true" scrollHeight="100" 
+                              value="#{itemSearchPanel.resultList}" var="item"
+                           rendered="#{not empty itemSearchPanel.resultList}">
+                    
+                        <p:column headerText="#{bundle['item.code']}" width="50">
+                            <h:outputText value="#{item.code}" />
+                        </p:column>
+                        
+                        <p:column headerText="#{bundle['item.description']}" width="200">
+                            <h:outputText value="#{item.description}" />
+                        </p:column>
+                        
+                        <p:column headerText="#{bundle['label.actions']}" width="80">
+                        
+                            <p:commandLink id="selectlinklist" immediate="true" 
+                                     rendered="#{not itemSearchPanel.edition}"
+                                        value="#{bundle['button.label.select']}" 
+                                   oncomplete="itemDialog.hide()"
+                                       update=":addDetailForm:display" >
+                                <f:setPropertyActionListener value="#{item}"
+                                                            target="#{itemSearchPanel.selectedEntity}" />
+                            </p:commandLink>
+                            
+                            <p:commandLink id="selectlinkedit" immediate="true" 
+                                     rendered="#{itemSearchPanel.edition}"
+                                        value="#{bundle['button.label.select']}" 
+                                   oncomplete="itemDialog.hide()"
+                                       update=":addDetailForm:display" >
+                                <f:setPropertyActionListener value="#{item}"
+                                                            target="#{itemSearchPanel.selectedEntity}" />
+                            </p:commandLink>
+                            
+                        </p:column>                    
+                    
+                    </p:dataTable>
+                
+                </p:panel>
+                
+            </p:panel>
+            
+        </h:form>
+        
+        <p:dialog id="additemDlg" modal="true" 
+              header="#{bundle['add']} #{bundle['item']}" 
+               draggable="true" widgetVar="addItemDialog"
+              showEffect="fade" hideEffect="fade" resizable="false">
+              
+            <h:form id="additemform">
+
+                <p:spacer height="10px" />
+                <p:panel id="display">
+                    <h:panelGrid columns="2" style="width:100%;" 
+                                rendered="#{itemSearchPanel.selected}">
+                    
+                        <p:outputLabel for="itemdescription" value="#{bundle['item.description']}" />
+                        <h:inputText id="itemdescription" size="30" required="true"  
+                            value="#{itemSearchPanel.selectedEntity.description}" />
+                    
+                        <p:outputLabel for="itemcode" value="#{bundle['item.code']}" />
+                        <h:inputText id="itemcode" size="10" maxlength="10" required="true" 
+                            value="#{itemSearchPanel.selectedEntity.code}" />
+                    
+                        <p:outputLabel for="barcode" value="#{bundle['item.barcode']}" />
+                        <h:inputText id="barcode" size="20" maxlength="20"  
+                            value="#{itemSearchPanel.selectedEntity.barcode}" />
+                    
+                        <p:outputLabel for="minimunStock" value="#{bundle['item.minimunStock']}" />
+                        <h:inputText id="minimunStock" size="30"  
+                            value="#{itemSearchPanel.selectedEntity.minimunStock}" />
+                    
+                    </h:panelGrid>
+                </p:panel>
+                    <div align="right">
+                        <p:commandButton id="cancel" value="#{bundle['button.label.cancel']}"
+                                     action="#{itemSearchPanel.clear}" process="cancel"
+                                 oncomplete="addItemDialog.hide();"/>
+                        <p:spacer width="10px"/>
+                        <p:commandButton id="save" value="#{bundle['button.label.save']}"
+                             actionListener="#{itemSearchPanel.save}"
+                                 oncomplete="checkInfoData(xhr, status, args)"/>
+                    </div>
+            </h:form>
+        </p:dialog>
+        
+        <script type="text/javascript">  
+            function checkInfoData(xhr, status, args) {  
+                if(args.validationFailed) {  
+                    jQuery('#additemDlg').effect("shake", { times:3 }, 100);  
+                } else {  
+                    addItemDialog.hide(); 
+                    itemDialog.hide();
+                }  
+            }  
+        </script>              
+        
+    </p:dialog>                  
         </ui:define>
         
     </ui:composition>
