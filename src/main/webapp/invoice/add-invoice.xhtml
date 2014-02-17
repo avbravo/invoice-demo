@@ -149,7 +149,8 @@
             <p:dialog id="addDetailDlg" widgetVar="addDetailDialog"
                    modal="true" resizable="false" 
               showEffect="puff" hideEffect="explode" 
-                   width="400" minHeight="500" >
+                   width="400" minHeight="500" 
+                  header="#{bundle.add} #{bundle['invoice.detail']}" >
                 
                 <p:ajax event="close" update=":editform:collectionpanel" />
                 
@@ -158,7 +159,7 @@
                     <p:spacer height="5px"/>
                     
                     <p:panel id="display"  
-                         header="#{bundle.add} #{bundle['invoice.detail']}">
+                         header="#{bundle['invoice.detail']} #{bundle.info} ">
                         
                         <p:spacer height="8px"/>
                         <h:panelGrid columns="2" >
@@ -226,146 +227,149 @@
                 </h:form>
             </p:dialog>                
 
-    <p:dialog id="itemDlg" widgetVar="itemDialog"
-          header="#{bundle['search.label.searching']} #{bundle['item']}" 
-           modal="true" resizable="false" position="top"
-      showEffect="puff" hideEffect="clip" 
-       minHeight="300" width="500">
-        
-        <p:ajax event="close" listener="#{itemSearchPanel.handleClose}" />
-        
-        <h:form id="itempanelform">
-        
-            <p:panel id="display">
-            
-                <p:panel id="itempanelsearch" header="#{bundle['search.label.lookup']}" >
-                    <h:panelGrid columns="2">
-                        <h:outputLabel for="description" value="#{bundle['item.description']}" />
-                        <p:inputText id="description" size="20" 
-                                  value="#{itemSearchPanel.description}" />
-                                  
-                        <h:outputLabel for="code" value="#{bundle['item.code']}" />
-                        <p:inputText id="code" size="20"
-                                  value="#{itemSearchPanel.code}" />
-                        
-                    </h:panelGrid>
-                    <table style="width: 100%;">
-                        <tr valign="middle" >
-                            <td align="center">
-                                <p:commandButton id="search" update="panelcollection" 
-                                              value="#{bundle['search.label.lookup']}"
-                                              action="#{itemSearchPanel.search}"/>
-                                </td>
-                            <td align="right">
-                                <p:commandButton id="add" update=":additemform:display" 
-                                              value="#{bundle['add']}"
-                                     actionListener="#{itemSearchPanel.prepareNew}"
-                                         oncomplete="addItemDialog.show()"/>
-                            </td>
-                        </tr>
-                    </table>
-                </p:panel>
+            <p:dialog id="itemDlg" widgetVar="itemDialog"
+                  header="#{bundle['search.label.searching']} #{bundle['item']}" 
+                   modal="true" resizable="false" position="top"
+              showEffect="puff" hideEffect="clip" 
+               minHeight="300" width="500">
                 
-                <p:spacer id="sp1" height="10"/>
-                <p:panel id="panelcollection" header="#{bundle['items']}">
+                <p:ajax event="close" listener="#{itemSearchPanel.handleClose}" />
                 
-                    <p:dataTable id="itempanelcollection" 
-                         scrollable="true" scrollRows="#{searchMaxResutl}" liveScroll="true" scrollHeight="100" 
-                              value="#{itemSearchPanel.resultList}" var="item"
-                           rendered="#{not empty itemSearchPanel.resultList}">
+                <h:form id="itempanelform">
+                
+                    <p:panel id="display">
                     
-                        <p:column headerText="#{bundle['item.code']}" width="50">
-                            <h:outputText value="#{item.code}" />
-                        </p:column>
+                        <p:panel id="itempanelsearch" header="#{bundle['search.label.lookup']}" >
+                            <h:panelGrid columns="2">
+                                <h:outputLabel for="description" value="#{bundle['item.description']}" />
+                                <p:inputText id="description" size="20" 
+                                          value="#{itemSearchPanel.description}" />
+                                          
+                                <h:outputLabel for="code" value="#{bundle['item.code']}" />
+                                <p:inputText id="code" size="20"
+                                          value="#{itemSearchPanel.code}" />
+                                
+                            </h:panelGrid>
+                            <table style="width: 100%;">
+                                <tr valign="middle" >
+                                    <td align="center">
+                                        <p:commandButton id="search" update="panelcollection" 
+                                                      value="#{bundle['search.label.lookup']}"
+                                                      action="#{itemSearchPanel.search}"/>
+                                        </td>
+                                    <td align="right">
+                                        <p:commandButton id="add" update=":additemform:display" 
+                                                      value="#{bundle['add']}"
+                                             actionListener="#{itemSearchPanel.prepareNew}"
+                                                 oncomplete="addItemDialog.show()"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </p:panel>
                         
-                        <p:column headerText="#{bundle['item.description']}" width="200">
-                            <h:outputText value="#{item.description}" />
-                        </p:column>
+                        <p:spacer id="sp1" height="10"/>
+                        <p:panel id="panelcollection" header="#{bundle['items']}">
                         
-                        <p:column headerText="#{bundle['label.actions']}" width="80">
-                        
-                            <p:commandLink id="selectlinklist" immediate="true" 
-                                     rendered="#{not itemSearchPanel.edition}"
-                                        value="#{bundle['button.label.select']}" 
-                                   oncomplete="itemDialog.hide()"
-                                       update=":addDetailForm:display" >
-                                <f:setPropertyActionListener value="#{item}"
-                                                            target="#{itemSearchPanel.selectedEntity}" />
-                            </p:commandLink>
+                            <p:dataTable id="itempanelcollection" 
+                                 scrollable="true" scrollRows="#{searchMaxResutl}" liveScroll="true" scrollHeight="100" 
+                                      value="#{itemSearchPanel.resultList}" var="item"
+                                   rendered="#{not empty itemSearchPanel.resultList}">
                             
-                            <p:commandLink id="selectlinkedit" immediate="true" 
-                                     rendered="#{itemSearchPanel.edition}"
-                                        value="#{bundle['button.label.select']}" 
-                                   oncomplete="itemDialog.hide()"
-                                       update=":addDetailForm:display" >
-                                <f:setPropertyActionListener value="#{item}"
-                                                            target="#{itemSearchPanel.selectedEntity}" />
-                            </p:commandLink>
+                                <p:column headerText="#{bundle['item.code']}" width="50">
+                                    <h:outputText value="#{item.code}" />
+                                </p:column>
+                                
+                                <p:column headerText="#{bundle['item.description']}" width="200">
+                                    <h:outputText value="#{item.description}" />
+                                </p:column>
+                                
+                                <p:column headerText="#{bundle['label.actions']}" width="80">
+                                
+                                    <p:commandLink id="selectlinklist" immediate="true" 
+                                             rendered="#{not itemSearchPanel.edition}"
+                                                value="#{bundle['button.label.select']}" 
+                                           oncomplete="itemDialog.hide()"
+                                               update=":addDetailForm:display" >
+                                        <f:setPropertyActionListener value="#{item}"
+                                                                    target="#{itemSearchPanel.selectedEntity}" />
+                                    </p:commandLink>
+                                    
+                                    <p:commandLink id="selectlinkedit" immediate="true" 
+                                             rendered="#{itemSearchPanel.edition}"
+                                                value="#{bundle['button.label.select']}" 
+                                           oncomplete="itemDialog.hide()"
+                                               update=":addDetailForm:display" >
+                                        <f:setPropertyActionListener value="#{item}"
+                                                                    target="#{itemSearchPanel.selectedEntity}" />
+                                    </p:commandLink>
+                                    
+                                </p:column>                    
                             
-                        </p:column>                    
+                            </p:dataTable>
+                        
+                        </p:panel>
+                        
+                    </p:panel>
                     
-                    </p:dataTable>
+                </h:form>
                 
-                </p:panel>
-                
-            </p:panel>
+                </p:dialog>
+        
+            <p:dialog id="additemDlg" 
+                  header="#{bundle['add']} #{bundle['item']}" 
+                   draggable="true" widgetVar="addItemDialog"
+                  showEffect="fade" hideEffect="fade" resizable="false">
+                  
+                <h:form id="additemform">
+    
+                    <p:spacer height="10px" />
+                    <p:panel id="display">
+                        <h:panelGrid columns="2" style="width:100%;" 
+                                    rendered="#{itemSearchPanel.selected}">
+                        
+                            <p:outputLabel for="itemdescription" value="#{bundle['item.description']}" />
+                            <h:inputText id="itemdescription" size="30" required="true"  
+                                value="#{itemSearchPanel.selectedEntity.description}" />
+                        
+                            <p:outputLabel for="itemcode" value="#{bundle['item.code']}" />
+                            <h:inputText id="itemcode" size="10" maxlength="10" required="true" 
+                                value="#{itemSearchPanel.selectedEntity.code}" />
+                        
+                            <p:outputLabel for="barcode" value="#{bundle['item.barcode']}" />
+                            <h:inputText id="barcode" size="20" maxlength="20"  
+                                value="#{itemSearchPanel.selectedEntity.barcode}" />
+                        
+                            <p:outputLabel for="minimunStock" value="#{bundle['item.minimunStock']}" />
+                            <h:inputText id="minimunStock" size="30"  
+                                value="#{itemSearchPanel.selectedEntity.minimunStock}" />
+                        
+                        </h:panelGrid>
+                    </p:panel>
+                        <div align="right">
+                            <p:commandButton id="cancel" value="#{bundle['button.label.cancel']}"
+                                         action="#{itemSearchPanel.clear}" process="cancel"
+                                     oncomplete="addItemDialog.hide();"/>
+                            <p:spacer width="10px"/>
+                            <p:commandButton id="save" value="#{bundle['button.label.save']}"
+                                         update=":addDetailForm:display"
+                                 actionListener="#{itemSearchPanel.save}"
+                                     oncomplete="checkInfoDataAddItem(xhr, status, args)"/>
+                        </div>
+                </h:form>
+            </p:dialog>
             
-        </h:form>
-        
-        <p:dialog id="additemDlg" modal="true" 
-              header="#{bundle['add']} #{bundle['item']}" 
-               draggable="true" widgetVar="addItemDialog"
-              showEffect="fade" hideEffect="fade" resizable="false">
-              
-            <h:form id="additemform">
-
-                <p:spacer height="10px" />
-                <p:panel id="display">
-                    <h:panelGrid columns="2" style="width:100%;" 
-                                rendered="#{itemSearchPanel.selected}">
-                    
-                        <p:outputLabel for="itemdescription" value="#{bundle['item.description']}" />
-                        <h:inputText id="itemdescription" size="30" required="true"  
-                            value="#{itemSearchPanel.selectedEntity.description}" />
-                    
-                        <p:outputLabel for="itemcode" value="#{bundle['item.code']}" />
-                        <h:inputText id="itemcode" size="10" maxlength="10" required="true" 
-                            value="#{itemSearchPanel.selectedEntity.code}" />
-                    
-                        <p:outputLabel for="barcode" value="#{bundle['item.barcode']}" />
-                        <h:inputText id="barcode" size="20" maxlength="20"  
-                            value="#{itemSearchPanel.selectedEntity.barcode}" />
-                    
-                        <p:outputLabel for="minimunStock" value="#{bundle['item.minimunStock']}" />
-                        <h:inputText id="minimunStock" size="30"  
-                            value="#{itemSearchPanel.selectedEntity.minimunStock}" />
-                    
-                    </h:panelGrid>
-                </p:panel>
-                    <div align="right">
-                        <p:commandButton id="cancel" value="#{bundle['button.label.cancel']}"
-                                     action="#{itemSearchPanel.clear}" process="cancel"
-                                 oncomplete="addItemDialog.hide();"/>
-                        <p:spacer width="10px"/>
-                        <p:commandButton id="save" value="#{bundle['button.label.save']}"
-                             actionListener="#{itemSearchPanel.save}"
-                                 oncomplete="checkInfoData(xhr, status, args)"/>
-                    </div>
-            </h:form>
-        </p:dialog>
-        
-        <script type="text/javascript">  
-            function checkInfoData(xhr, status, args) {  
-                if(args.validationFailed) {  
-                    jQuery('#additemDlg').effect("shake", { times:3 }, 100);  
-                } else {  
-                    addItemDialog.hide(); 
-                    itemDialog.hide();
+            <script type="text/javascript">  
+                function checkInfoDataAddItem(xhr, status, args) {  
+                    if(args.validationFailed) {  
+                        jQuery('#additemDlg').effect("shake", { times:3 }, 100);  
+                    } else {  
+                        addItemDialog.hide(); 
+                        itemDialog.hide();
+                    }  
                 }  
-            }  
-        </script>              
+            </script>              
         
-    </p:dialog>                  
+                      
         </ui:define>
         
     </ui:composition>

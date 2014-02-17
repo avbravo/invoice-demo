@@ -30,7 +30,7 @@ public class SupplierSearchPanel extends SearchPanelHelper implements SearchPane
     /**
      * 
      */
-    private static final long serialVersionUID = 8529875586469287554L;
+    private static final long serialVersionUID = 1369844255621007634L;
 
     @Inject
     private EntityManager em;
@@ -138,9 +138,9 @@ public class SupplierSearchPanel extends SearchPanelHelper implements SearchPane
         selectedEntity = new Supplier();
     }
 
-    public String save()
+    public void save()
     {
-        if (errors()) return null;
+        if (errors()) return;
         
         try
         {
@@ -153,7 +153,6 @@ public class SupplierSearchPanel extends SearchPanelHelper implements SearchPane
             e.printStackTrace();
         }
         
-        return null;
     }
 
     private boolean errors()

@@ -92,7 +92,8 @@
             </p:panel>
             
         </h:form>
-        
+    </p:dialog>
+    
         <p:dialog id="addsupplierDlg" 
               header="#{bundle['add']} #{bundle['supplier']}" 
                draggable="true" widgetVar="addSupplierDialog"
@@ -129,15 +130,16 @@
                                  oncomplete="addSupplierDialog.hide();"/>
                         <p:spacer width="10px"/>
                         <p:commandButton id="save" value="#{bundle['button.label.save']}"
-                             actionListener="#{supplierSearchPanel.save}"
-                                 oncomplete="checkInfoData(xhr, status, args)"/>
+                                     action="#{supplierSearchPanel.save}"
+                                 oncomplete="checkInfoDataSupplier(xhr, status, args);"/>
                     </div>
             </h:form>
         </p:dialog>
         
         <script type="text/javascript">  
-            function checkInfoData(xhr, status, args) {  
-                if(args.validationFailed) {  
+            function checkInfoDataSupplier(xhr, status, args) 
+            {  
+                if(args.validationFailed) {
                     jQuery('#addsupplierDlg').effect("shake", { times:3 }, 100);  
                 } else {  
                     addSupplierDialog.hide(); 
@@ -145,6 +147,5 @@
                 }  
             }  
         </script>              
-        
-    </p:dialog>        
+                    
 </ui:composition>

@@ -13,10 +13,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,7 +38,11 @@ public class Invoice implements EntityInterface
      * 
      */
     private static final long serialVersionUID = 5602514763693442402L;
-    
+
+
+    private static final String GENERATOR = "INVOICE_ID_GENERATOR";
+
+
     private Long id;
     private Supplier supplier;
     private Date invoiceDate;
@@ -53,7 +59,8 @@ public class Invoice implements EntityInterface
     }
     
     @Id
-    @GeneratedValue
+    @SequenceGenerator(name = GENERATOR, sequenceName = "public.invoice_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = GENERATOR)
     @Column(name = "id", unique = true, nullable = false)
     public Long getId()
     {

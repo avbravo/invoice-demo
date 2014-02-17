@@ -134,7 +134,6 @@ public class ItemSearchPanel extends SearchPanelHelper implements SearchPanel
 
     public void prepareNew()
     {
-        System.out.println("new item!!");
         selectedEntity = new Item();
     }
 
@@ -145,6 +144,7 @@ public class ItemSearchPanel extends SearchPanelHelper implements SearchPanel
         try
         {
             manager.update(selectedEntity);
+            selectedEntity = em.find(Item.class, selectedEntity.getId());
         }
         catch (Exception e)
         {

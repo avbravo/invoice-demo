@@ -6,10 +6,22 @@
   <packaging>war</packaging>
   <version>1.0</version>
   <name>invoicedemo</name>
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>org.jboss.spec</groupId>
+  			<artifactId>jboss-javaee-web-6.0</artifactId>
+  			<version>${javaee6.web.spec.version}</version>
+  			<type>pom</type>
+  			<scope>import</scope>
+  		</dependency>
+  	</dependencies>
+  </dependencyManagement>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
+    <javaee6.web.spec.version>2.0.0.Final</javaee6.web.spec.version>
   </properties>
   <dependencies>
     <dependency>
@@ -24,6 +36,23 @@
         <artifactId>primefaces</artifactId>  
         <version>4.0</version>  
     </dependency> 
+    <dependency>
+    	<groupId>org.jboss.spec.javax.faces</groupId>
+    	<artifactId>jboss-jsf-api_2.0_spec</artifactId>
+    	<scope>provided</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.jboss.spec.javax.faces</groupId>
+    	<artifactId>jboss-jsf-api_2.0_spec</artifactId>
+    	<scope>provided</scope>
+    	<optional>false</optional>
+    </dependency>
+    <dependency>
+    	<groupId>org.jboss.spec.javax.faces</groupId>
+    	<artifactId>jboss-jsf-api_2.0_spec</artifactId>
+    	<scope>provided</scope>
+    	<optional>false</optional>
+    </dependency>
   </dependencies>
   <profiles>
     <profile>

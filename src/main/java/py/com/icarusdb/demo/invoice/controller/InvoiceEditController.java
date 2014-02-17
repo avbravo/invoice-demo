@@ -23,7 +23,6 @@ import py.com.icarusdb.demo.invoice.controller.panel.SupplierSearchPanel;
 import py.com.icarusdb.demo.invoice.data.DatabaseManager;
 import py.com.icarusdb.demo.invoice.model.Invoice;
 import py.com.icarusdb.demo.invoice.model.InvoiceDetail;
-import py.com.icarusdb.demo.invoice.model.InvoiceDetailId;
 import py.com.icarusdb.demo.invoice.model.Supplier;
 import py.com.icarusdb.demo.session.ContextHelper;
 import py.com.icarusdb.demo.session.InvoiceDemoNavigationRulez;
@@ -295,12 +294,11 @@ public class InvoiceEditController extends BaseController implements EditControl
     
     public void addDetail()
     {
-        detail = new InvoiceDetail(new InvoiceDetailId());
+        detail = new InvoiceDetail(selectedRow);
     }
     
     public void confirmAddDetail()
     {
-        detail.setInvoice(selectedRow);
         detail.setItem(itemSearchPanel.getSelectedEntity());
         
         BigDecimal totalprice = detail.getUnitPrice().multiply(new BigDecimal(detail.getAmount()));

@@ -39,31 +39,19 @@
                 <p:spacer height="20px" />
                 <table width="80%" border="0" align="center">
                     <tr valign="top" >
-                        <td align="center">
-                        <table width="100%" border="0" align="center">
-                            <tr >
-                                <td align="left">
-                                    <p:outputPanel autoUpdate="true">
-                                       <h:outputText rendered="#{loggedIn}" id="remoteConnInfo"
-                                            styleClass="textos"
-                                            value="#{credentials.username} :: #{credentials.ipAddr}" />
-                                    </p:outputPanel>
-                                </td>
-                                <td align="right">
-                                    <h:outputLink id="loginLink" title="login"
-                                               value="javascript:void(0)" onclick="loginDlg.show()" 
-                                            rendered="#{not loggedIn}">     
-                                        <p:graphicImage value="/resources/gfx/login.png" />  
-                                    </h:outputLink>
-                                    <h:form id="logoutform" rendered="false">
-                                        <h:commandLink id="logoutLink" value="#{bundle['login.logout']}"
-                                                 rendered="#{loggedIn}" 
-                                                    style="text-decoration: none;"
-                                                   action="#{login.logout()}" />     
-                                    </h:form>
-                                </td> 
-                            </tr>
-                        </table>
+                        <td >
+                            <div align="left">
+                            <p:outputPanel autoUpdate="true">
+                               <h:outputText rendered="#{loggedIn}" id="remoteConnInfo"
+                                    styleClass="textos" style="text-indent: 20px;"
+                                    value="#{credentials.username} :: #{credentials.ipAddr}" />
+                            </p:outputPanel>
+                            <h:outputLink id="loginLink" title="login"
+                                value="javascript:void(0)" onclick="loginDlg.show()"
+                                rendered="#{not loggedIn}">
+                                <p:graphicImage value="/resources/gfx/login.png" />
+                            </h:outputLink>
+                            </div>
                         </td> </tr>
                     <tr valign="top" align="center">
                         <td >
@@ -75,7 +63,6 @@
                         </td>
                     </tr>
                 </table>
-            
             </p:outputPanel>
             
             <p:ajaxStatus id="ajaxstatuspanel" 
@@ -107,7 +94,7 @@
                           
                         <f:facet name="footer">  
                             <p:commandButton id="loginButton" value="Login" 
-                                         update=":messages,:logoutform"   
+                                         update=":messages"   
                                  actionListener="#{login.login}"   
                                      oncomplete="handleLoginRequest(xhr, status, args)"/>  
                         </f:facet>  
