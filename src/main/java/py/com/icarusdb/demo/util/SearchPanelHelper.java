@@ -3,8 +3,6 @@
  */
 package py.com.icarusdb.demo.util;
 
-import javax.ws.rs.GET;
-
 import org.primefaces.context.RequestContext;
 
 /**

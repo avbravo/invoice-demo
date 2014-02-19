@@ -261,3 +261,7 @@ input {
 .textos {
     font-family: Arial,sans-serif;
 }
+
+.toUpperCase {
+    text-transform: uppercase;
+}

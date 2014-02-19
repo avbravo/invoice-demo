@@ -19,7 +19,7 @@
                 <p:panel id="supplierpanelsearch" header="#{bundle['search.label.lookup']}" >
                     <h:panelGrid columns="2">
                         <h:outputLabel for="ruc" value="#{bundle['label.ruc']}" />
-                        <p:inputText id="ruc" size="20" 
+                        <p:inputText id="ruc" size="20"
                                   value="#{supplierSearchPanel.ruc}" />
                                   
                         <h:outputLabel for="name" value="#{bundle['label.name']}" />
@@ -111,8 +111,9 @@
                             value="#{supplierSearchPanel.selectedEntity.name}" />
                     
                         <p:outputLabel for="supplierruc" value="#{bundle['label.ruc']}" />
-                        <h:inputText id="supplierruc" size="30" required="true"  
-                            value="#{supplierSearchPanel.selectedEntity.ruc}" />
+                        <h:inputText id="supplierruc" size="30" required="true"
+                             styleClass="toUpperCase"  
+                                  value="#{supplierSearchPanel.selectedEntity.ruc}" />
                     
                         <p:outputLabel for="supplieraddress" value="#{bundle['label.address']}" />
                         <h:inputText id="supplieraddress" size="30"  
@@ -130,6 +131,7 @@
                                  oncomplete="addSupplierDialog.hide();"/>
                         <p:spacer width="10px"/>
                         <p:commandButton id="save" value="#{bundle['button.label.save']}"
+                                     update="#{supplierSearchPanel.tagId2update}"
                                      action="#{supplierSearchPanel.save}"
                                  oncomplete="checkInfoDataSupplier(xhr, status, args);"/>
                     </div>

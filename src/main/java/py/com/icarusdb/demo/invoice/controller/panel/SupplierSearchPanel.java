@@ -88,21 +88,31 @@ public class SupplierSearchPanel extends SearchPanelHelper implements SearchPane
     @Override
     public void search()
     {
-        String qry = qlString;
+        String restrics = " where ";
+        boolean addAnd = false;
         
         if(ruc != null && !ruc.isEmpty())
         {
-            qry += "and lower(ruc) like '%"+ruc.trim().toLowerCase()+"%' ";
+            addAnd = true;
+            restrics += "lower(ruc) like '%"+ruc.trim().toLowerCase()+"%' ";
         }
         
         if(name != null && !name.isEmpty())
         {
-            qry += "and lower(name) like '%"+name.trim().toLowerCase()+"%' ";
+            if (addAnd) restrics += "and ";
+            restrics += "lower(name) like '%"+name.trim().toLowerCase()+"%' ";
         }
         
-        qry += "order by name";
+        if(restrics.trim().length() == 5)
+        {
+            restrics = "order by name asc";
+        }
+        else
+        {
+            restrics += "order by name asc";
+        }
         
-        resultList = em.createQuery(qry, Supplier.class).getResultList();
+        resultList = em.createQuery(qlString + restrics, Supplier.class).getResultList();
     
         MessageUtil.showResults(resultList);
     }
@@ -134,7 +144,6 @@ public class SupplierSearchPanel extends SearchPanelHelper implements SearchPane
 
     public void prepareNew()
     {
-        System.out.println("new supplier!!");
         selectedEntity = new Supplier();
     }
 
@@ -144,7 +153,7 @@ public class SupplierSearchPanel extends SearchPanelHelper implements SearchPane
         
         try
         {
-            manager.update(selectedEntity);
+            manager.persist(selectedEntity);
         }
         catch (Exception e)
         {

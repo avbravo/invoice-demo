@@ -8,6 +8,9 @@
     <ui:composition template="/resources/template.xhtml">
     
         
+        <ui:define name="pageTitle">#{bundle['app.name']}</ui:define>
+        <ui:define name="pageHeader">#{bundle['app.module']}</ui:define>
+        
         <ui:include src="/panels/supplierSearchPanel.xhtml" />
         <ui:include src="/panels/itemSearchPanel.xhtml" />
         
@@ -22,7 +25,7 @@
                      header="#{invoiceEditController.actionSubTitle} #{bundle['invoice']}">
                          
                     <p:focus />
-                    <p:panelGrid id="datapanelg" columns="2" >
+                    <p:panelGrid id="datapanelg" columns="3" >
                         
                         <h:outputLabel for="supplier" value="#{bundle['supplier']}" />
                         <h:panelGroup id="supplier-grouping">
@@ -30,6 +33,7 @@
                                 <p:inputText id="supplier" readonly="true" disabled="true" size="20" required="true"
                                           requiredMessage="#{bundle['error.required.value']} #{bundle['supplier']}"
                                           value="#{supplierSearchPanel.selectedEntity.name}"/>
+                                <p:spacer width="2px"/>
                                 <p:commandButton id="searchbutton_supplier" icon="ui-icon-search"  
                                              update=":supplierpanelform:display" 
                                             process="searchbutton_supplier"
@@ -38,12 +42,21 @@
                             </p:outputPanel>
                         </h:panelGroup>
                         
-                      <h:outputLabel for="invoiceDate" style="width: 115px;"
+                        <h:panelGroup id="supplier-ruc" >
+                            <h:outputLabel value="#{bundle['label.ruc']}" />
+                            <p:inputText readonly="true" disabled="true" size="20" 
+                                value="#{supplierSearchPanel.selectedEntity.ruc}" />
+                        </h:panelGroup>
+                      
+                        
+                        <h:outputLabel for="invoiceDate" style="width: 115px;"
                                      value="#{bundle['supplier.date']}" />
                         <p:calendar id="invoiceDate" pattern="#{datePattern}" 
                                   size="8" effect="blind" required="true" navigator="true"
                         requiredMessage="#{bundle['error.required.value']} #{bundle['invoice.date']}"
                                  value="#{invoiceEditController.selectedRow.invoiceDate}"/>
+
+                        <p:spacer width="1px"/>
 
                         <h:outputLabel for="invoiceNumber" value="#{bundle['invoice.number']}" />
                         <p:inputText id="invoiceNumber" required="true" size="15"
@@ -51,6 +64,13 @@
                                disabled="#{invoiceEditController.view}" 
                                   value="#{invoiceEditController.selectedRow.number}"/>
                     
+                        <h:panelGroup id="total-invoice-group" >
+                            <h:outputLabel value="#{bundle['label.total']}" />
+                            <p:inputText id="total-invoice" 
+                                   readonly="true" disabled="true" size="20" 
+                                      value="#{invoiceEditController.selectedRow.totalAmount}" />
+                        </h:panelGroup>
+                        
                     </p:panelGrid>
                 </p:panel>
 
@@ -109,7 +129,7 @@
                              headerText="#{bundle['label.actions']}" >
                         
                             <p:commandButton id="deletelink" immediate="true" icon="ui-icon-close" 
-                                       update=":editform:datatablecollection"
+                                       update=":editform:datatablecollection :editform:total-invoice"
                                      rendered="#{credentials.hasRol('delete')}"
                                       onclick="if (!confirm('#{bundle['label.confirm.delete']}','#{bundle['button.label.delete']}')) return false" 
                                        action="#{invoiceEditController.delete(_indexVar)}" />                            
@@ -127,13 +147,13 @@
                     <h:panelGroup id="buttonsgroup">
                     
                         <p:commandButton id="savebutton" value="#{bundle['button.label.save']}"  
-                                       icon="ui-icon-document"  
+                                       icon="ui-icon-document" update=":editform" 
                                    disabled="#{not supplierSearchPanel.selected}"
                                      action="#{invoiceEditController.save}" />
             
                         <p:commandButton id="cancelbutton" value="#{bundle['button.label.cancel']}"  
                                        icon="ui-icon-document" ajax="false" immediate="true" 
-                                     action="#{invoiceEditController.init}" />
+                                     action="#{invoiceEditController.initVarz}" />
             
                         <p:commandButton id="closebutton" value="#{bundle['button.label.close']}" 
                                        icon="ui-icon-close" ajax="false" immediate="true"
@@ -218,7 +238,7 @@
                             <p:commandButton id="saveadd" immediate="true" 
                                           value="#{bundle['add']}" 
                                      oncomplete="addDetailDialog.hide()"
-                                         update=":editform:collectionpanel"
+                                         update=":editform:collectionpanel :editform:total-invoice"
                                          action="#{invoiceEditController.confirmAddDetail}" />
                         </div>
                                                 
@@ -246,7 +266,7 @@
                                           value="#{itemSearchPanel.description}" />
                                           
                                 <h:outputLabel for="code" value="#{bundle['item.code']}" />
-                                <p:inputText id="code" size="20"
+                                <p:inputText id="code" size="20"  
                                           value="#{itemSearchPanel.code}" />
                                 
                             </h:panelGrid>
@@ -332,8 +352,9 @@
                                 value="#{itemSearchPanel.selectedEntity.description}" />
                         
                             <p:outputLabel for="itemcode" value="#{bundle['item.code']}" />
-                            <h:inputText id="itemcode" size="10" maxlength="10" required="true" 
-                                value="#{itemSearchPanel.selectedEntity.code}" />
+                            <h:inputText id="itemcode" size="10" maxlength="10" required="true"
+                                 styleClass="toUpperCase" 
+                                      value="#{itemSearchPanel.selectedEntity.code}" />
                         
                             <p:outputLabel for="barcode" value="#{bundle['item.barcode']}" />
                             <h:inputText id="barcode" size="20" maxlength="20"  

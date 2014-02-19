@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
@@ -25,6 +24,7 @@ import py.com.icarusdb.demo.invoice.model.Invoice;
 import py.com.icarusdb.demo.invoice.model.InvoiceDetail;
 import py.com.icarusdb.demo.invoice.model.Supplier;
 import py.com.icarusdb.demo.session.ContextHelper;
+import py.com.icarusdb.demo.session.Credentials;
 import py.com.icarusdb.demo.session.InvoiceDemoNavigationRulez;
 import py.com.icarusdb.demo.util.AppHelper;
 import py.com.icarusdb.demo.util.BaseController;
@@ -41,8 +41,14 @@ import py.com.icarusdb.demo.util.NavigationRulezHelper;
 @RolesAllowed({"supermaster", "icarus", "luchobenitez"})
 public class InvoiceEditController extends BaseController implements EditController, Serializable
 {
-//    @Inject
-//    private Credentials credentials;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -334088012473988937L;
+
+    @SuppressWarnings("unused") //TODO remove when using audit
+    @Inject
+    private Credentials credentials;
     
     @Inject
     private DatabaseManager databaseManager;
@@ -69,9 +75,6 @@ public class InvoiceEditController extends BaseController implements EditControl
     
     private String tax = null; // TODO make it enum
     
-//    private Item item = null;
-    
-    
     @Override
     @PostConstruct
     public void init()
@@ -84,41 +87,24 @@ public class InvoiceEditController extends BaseController implements EditControl
             return;
         }
         
-        tax = null;
-        
-//        if(!contextHelper.containsMenuAction(SessionParameters.ACTION_MENU_INVOICE))
-//        {
-//            MessageUtil.addFacesMessageError("error.action.noActionDefined");
-//            NavigationRulezHelper.redirect(navigationRulez.goIndex());
-//            return;
-//        }
-        
         em = emf.createEntityManager();
         
-//        action = contextHelper.getSelectedAction();
-//        if(action.equalsIgnoreCase(SessionParameters.ACTION_ADD_INVOICE)) 
-        {
-            supplier = null;
-            selectedRow = new Invoice();
-            details = new LinkedList<InvoiceDetail>();
-            
-            actionSubTitle = AppHelper.getBundleMessage("button.label.add");
-        }
-//        else
-//        {
-//            Serializable entityId = (Serializable) contextHelper.getSelectedEntityId();
-//            selectedRow = em.find(Invoice.class, entityId);
-//            actionSubTitle = AppHelper.getBundleMessage("button.label.update");
-//            supplier = selectedRow.getSupplier();
-//        }
-        
-        //TODO later remove
-        logger.log(Level.INFO, "init::" + this.getClass().getName());
-//        logger.log(Level.INFO, "action: " + action);
-        
-        supplierSearchPanel.clear();
+        actionSubTitle = AppHelper.getBundleMessage("button.label.add");
+
+        initVarz();
     }
     
+    public void initVarz()
+    {
+        tax = "exempt"; //TODO use enum
+        supplier = null;
+        selectedRow = new Invoice();
+        details = new LinkedList<InvoiceDetail>();
+        
+        supplierSearchPanel.clear();
+        itemSearchPanel.clear();
+    }
+
     public void clear()
     {
         contextHelper.clearAction();
@@ -166,21 +152,10 @@ public class InvoiceEditController extends BaseController implements EditControl
         return tax;
     }
     
-    public void setTax(String impuesto)
+    public void setTax(String tax)
     {
-        this.tax = impuesto;
+        this.tax = tax;
     }
-    
-//    public Item getItem()
-//    {
-//        return item;
-//    }
-//    
-//    public void setItem(Item item)
-//    {
-//        this.item = item;
-//    }
-    
     
     
 
@@ -196,7 +171,7 @@ public class InvoiceEditController extends BaseController implements EditControl
             selectedRow.setNumber(selectedRow.getNumber().trim());
             selectedRow.setSupplier(supplierSearchPanel.getSelectedEntity());
 
-            calculateTotals();
+            updateTotals();
             
             selectedRow.getInvoiceDetails().clear();
             selectedRow.getInvoiceDetails().addAll(details);
@@ -212,10 +187,6 @@ public class InvoiceEditController extends BaseController implements EditControl
                 
                 result = databaseManager.persist(selectedRow);
             }
-            else
-            {
-                result = databaseManager.update(selectedRow);
-            }
 
         }
         catch (Exception e) 
@@ -228,17 +199,29 @@ public class InvoiceEditController extends BaseController implements EditControl
             {
                 MessageUtil.addFacesMessageInfo("action.result.updated");
                 
+                initVarz();
+                
                 return null; //stays in the same page with a fresh and clean form 
             }
+            
+            //just in case if something happens, just because this is a demo and IT MUST NOT crush ;) -Icarus
+            selectedRow.setId(null);
+            for(InvoiceDetail detail : selectedRow.getInvoiceDetails())
+            {
+                detail.setId(null);
+            }
+            details.clear();
+            details.addAll(selectedRow.getInvoiceDetails());
         }
         
         return null;
     }
 
-    private void calculateTotals()
+    public void updateTotals()
     {
         BigDecimal totalExempt = BigDecimal.ZERO;
         BigDecimal totalIva05 = BigDecimal.ZERO;
+        
         BigDecimal totalIva10 = BigDecimal.ZERO;
         
         for(InvoiceDetail detail : details)
@@ -254,8 +237,8 @@ public class InvoiceEditController extends BaseController implements EditControl
         selectedRow.setTotalExempt(totalExempt);
         selectedRow.setTotalIva05(totalIva05);
         selectedRow.setTotalIva10(totalIva10);
-        
     }
+    
 
     private boolean check()
     {
@@ -318,19 +301,21 @@ public class InvoiceEditController extends BaseController implements EditControl
         
         details.add(detail);
         
+        updateTotals();
+        
         cancelAddDetail();
     }
 
     public void cancelAddDetail()
     {
         detail = null;
-//        item = null;
         itemSearchPanel.clear();
     }
 
     public void delete(int index)
     {
         details.remove(index);
+        updateTotals();
     }
     
     

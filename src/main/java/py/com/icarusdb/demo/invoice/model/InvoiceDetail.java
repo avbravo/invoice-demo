@@ -72,7 +72,7 @@ public class InvoiceDetail implements EntityInterface
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "invoice", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "invoice", nullable = false, insertable = true, updatable = true)
     public Invoice getInvoice()
     {
         return this.invoice;
@@ -117,7 +117,7 @@ public class InvoiceDetail implements EntityInterface
         this.unitPrice = unitPrice;
     }
 
-    @Column(name = "iva_05", nullable = false, precision = 8)
+    @Column(name = "iva_05", precision = 8)
     public BigDecimal getIva05()
     {
         return this.iva05;
@@ -128,7 +128,7 @@ public class InvoiceDetail implements EntityInterface
         this.iva05 = iva05;
     }
 
-    @Column(name = "iva_10", nullable = false, precision = 8)
+    @Column(name = "iva_10", precision = 8)
     public BigDecimal getIva10()
     {
         return this.iva10;
@@ -139,7 +139,7 @@ public class InvoiceDetail implements EntityInterface
         this.iva10 = iva10;
     }
 
-    @Column(name = "exempt", nullable = false, precision = 8)
+    @Column(name = "exempt", precision = 8)
     public BigDecimal getExempt()
     {
         return this.exempt;

@@ -22,7 +22,7 @@
             <p:growl id="messages" autoUpdate="true" />
               
             <p:outputPanel id="mainpanel" >
-
+        
                 <table width="100%" border="0">
                     <tr valign="top" align="center">
                         <td width="50%" style="font-size: xx-large;">
@@ -39,12 +39,12 @@
                 <p:spacer height="20px" />
                 <table width="80%" border="0" align="center">
                     <tr valign="top" >
-                        <td >
+                        <td style="text-indent: 5px;">
                             <div align="left">
                             <p:outputPanel autoUpdate="true">
                                <h:outputText rendered="#{loggedIn}" id="remoteConnInfo"
                                     styleClass="textos" style="text-indent: 20px;"
-                                    value="#{credentials.username} :: #{credentials.ipAddr}" />
+                                    value="#{credentials.username}->(#{credentials.companyName}) :: #{credentials.ipAddr}" />
                             </p:outputPanel>
                             <h:outputLink id="loginLink" title="login"
                                 value="javascript:void(0)" onclick="loginDlg.show()"

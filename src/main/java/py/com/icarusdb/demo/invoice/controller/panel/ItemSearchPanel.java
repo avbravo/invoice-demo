@@ -88,21 +88,32 @@ public class ItemSearchPanel extends SearchPanelHelper implements SearchPanel
     @Override
     public void search()
     {
-        String qry = qlString;
+        String restrics = " where ";
+        boolean addAnd = false;
         
         if(description != null && !description.isEmpty())
         {
-            qry += "and lower(description) like '%"+description.trim().toLowerCase()+"%' ";
+            addAnd = true;
+            restrics += "lower(description) like '%"+description.trim().toLowerCase()+"%' ";
         }
         
         if(code != null && !code.isEmpty())
         {
-            qry += "and lower(code) like '%"+code.trim().toLowerCase()+"%' ";
+            if (addAnd) restrics += "and ";
+            restrics += "lower(code) like '%"+code.trim().toLowerCase()+"%' ";
         }
         
-        qry += "order by description asc";
+        if(restrics.trim().length() == 5)
+        {
+            restrics = "order by description asc";
+        }
+        else
+        {
+            restrics += "order by description asc";
+        }
         
-        resultList = em.createQuery(qry, Item.class).getResultList();
+        
+        resultList = em.createQuery(qlString + restrics, Item.class).getResultList();
     
         MessageUtil.showResults(resultList);
     }
@@ -143,8 +154,7 @@ public class ItemSearchPanel extends SearchPanelHelper implements SearchPanel
         
         try
         {
-            manager.update(selectedEntity);
-            selectedEntity = em.find(Item.class, selectedEntity.getId());
+            manager.persist(selectedEntity);
         }
         catch (Exception e)
         {
@@ -173,6 +183,8 @@ public class ItemSearchPanel extends SearchPanelHelper implements SearchPanel
             message = new FacesMessage(required +": " +AppHelper.getBundleMessage("item.code"));
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
+        
+        //TODO check description existence !
         
         return (message != null);
     }
