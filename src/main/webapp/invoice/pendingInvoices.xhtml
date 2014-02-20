@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:composition template="/resources/template.xhtml">
+    
+        
+        <ui:define name="pageTitle">#{bundle['app.name']}</ui:define>
+        <ui:define name="pageHeader">#{bundle['app.module']}</ui:define>
+        
+        <ui:define name="content" > 
+        
+            <h:form id="editform" styleClass="contentWidth" >
+            
+                <!-- data panel -->
+                <p:panel id="datapanel" style="min-height: 100px; " 
+                     header="#{pendingInvoicesController.actionSubTitle} #{bundle['invoice']}">
+                         
+                    <p:focus />
+                    <p:panelGrid id="datapanelg" columns="2" >
+                        
+                        <h:outputLabel for="fromDate" style="width: 115px;"
+                                     value="#{bundle['label.from']} #{bundle['label.date']}" />
+                        <p:calendar id="fromDate" pattern="#{datePattern}" 
+                                  size="8" effect="blind" navigator="true"
+                                 value="#{pendingInvoicesController.fromDate}">
+                            <p:ajax event="dateSelect" 
+                                 listener="#{pendingInvoicesController.handleFromDateSelect}" />                                         
+                        </p:calendar>
+
+                        <h:outputLabel for="tillDate" style="width: 85px;"
+                                     value="#{bundle['label.till']} #{bundle['label.date']}" />
+                        <p:calendar id="tillDate" pattern="#{datePattern}" navigator="true"
+                                  size="8" mode="popup" effect="blind" 
+                                 value="#{pendingInvoicesController.tillDate}">
+                            <p:ajax event="dateSelect" 
+                                 listener="#{pendingInvoicesController.handleTillDateSelect}" />                                         
+                                </p:calendar>     
+
+                    </p:panelGrid>
+                </p:panel>
+
+                <p:panel id="collectionpanel" style="min-height: 100px; " rendered="false"
+                     header="#{bundle['invoice.details']}">
+                     
+                    <p:dataTable id="datatablecollection" 
+                                var="_detail" rowIndexVar="_indexVar" rows="#{searchMaxResutl}" 
+                          paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false"
+                              value="#{pendingInvoicesController.details}">
+                        
+                        <p:column width="50" 
+                             headerText="#{bundle['invoice.detail.amount']}" >
+                             <div align="right">
+                                <h:outputText value="#{_detail.amount}" />
+                             </div>
+                        </p:column>
+
+                        <p:column headerText="#{bundle['item.description']}" >
+                            <h:outputText value="#{_detail.item.description}" />
+                        </p:column>
+                                                
+                        <p:column width="70"   
+                             headerText="#{bundle['invoice.detail.unitPrice']}">
+                            <div align="right">
+                                <h:outputText value="#{_detail.unitPrice}" />
+                            </div>
+                        </p:column>
+                        
+                        <p:column width="70" headerText="#{bundle['exempt']}" >
+                            <div align="right">
+                                <h:outputText value="#{_detail.exempt}" />
+                            </div>
+                        </p:column>
+                        
+                        <p:column width="70" headerText="#{bundle['iva05']}" >
+                            <div align="right">
+                                <h:outputText value="#{_detail.iva05}" />
+                            </div>
+                        </p:column>
+                        
+                        <p:column width="70" headerText="#{bundle['iva10']}" >
+                            <div align="right">
+                                <h:outputText value="#{_detail.iva10}" />
+                            </div>
+                        </p:column>
+                        
+                        <p:column width="100" style="text-align: center;" 
+                             headerText="#{bundle['label.actions']}" >
+                        
+                           <h:outputText value="select[]" />                
+                            
+                        </p:column>
+ 
+                    </p:dataTable>  
+                    <p:spacer height="10px" />
+                         
+                </p:panel>
+                
+                <!-- action buttons panel -->
+                <p:panel id="buttonspanel">
+                    <p:spacer height="10px" />
+                    <h:panelGroup id="buttonsgroup">
+                    
+                        <p:commandButton id="savebutton" value="#{bundle['button.label.save']}"  
+                                       icon="ui-icon-document" update=":editform" 
+                                   disabled="#{not supplierSearchPanel.selected}"
+                                     action="#{pendingInvoicesController.save}" />
+            
+                        <p:commandButton id="cancelbutton" value="#{bundle['button.label.cancel']}"  
+                                       icon="ui-icon-document" ajax="false" immediate="true" 
+                                     action="#{pendingInvoicesController.initVarz}" />
+            
+                        <p:commandButton id="closebutton" value="#{bundle['button.label.close']}" 
+                                       icon="ui-icon-close" ajax="false" immediate="true"
+                             actionListener="#{pendingInvoicesController.clear}"
+                                     action="#{navigationRulez.goIndex()}"/>
+                    </h:panelGroup>
+                    
+                </p:panel>
+                
+                
+            </h:form>
+            
+        </ui:define>
+        
+    </ui:composition>
+    
+</html>
