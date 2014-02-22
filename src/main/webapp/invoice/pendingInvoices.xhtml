@@ -39,59 +39,77 @@
                             <p:ajax event="dateSelect" 
                                  listener="#{pendingInvoicesController.handleTillDateSelect}" />                                         
                                 </p:calendar>     
-
+                        
+                        <div align="right">
+                            <h:panelGroup>
+                                <p:commandButton id="clearbutton" icon="ui-icon-close" 
+                                             update=":editform"
+                                              value="#{bundle['button.label.clear']}" 
+                                     actionListener="#{pendingInvoicesController.initVarz}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="searchbutton" icon="ui-icon-search" 
+                                             update="collectionpanel printbutton"
+                                              value="#{bundle['search.label.lookup']}" 
+                                     actionListener="#{pendingInvoicesController.search}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="printbutton" icon="ui-icon-print" 
+                                             update=":editform:processbutton"
+                                           disabled="#{empty pendingInvoicesController.resultList}"
+                                              value="#{bundle['button.label.print']}" 
+                                     actionListener="#{pendingInvoicesController.print}" />
+                            </h:panelGroup>
+                        </div>
+                    
                     </p:panelGrid>
+                    
                 </p:panel>
-
-                <p:panel id="collectionpanel" style="min-height: 100px; " rendered="false"
+                <br />
+                <p:panel id="collectionpanel" style="min-height: 100px; " 
                      header="#{bundle['invoice.details']}">
                      
                     <p:dataTable id="datatablecollection" 
-                                var="_detail" rowIndexVar="_indexVar" rows="#{searchMaxResutl}" 
-                          paginator="true" paginatorPosition="top" paginatorAlwaysVisible="false"
-                              value="#{pendingInvoicesController.details}">
+                                var="_invoice" rowIndexVar="_indexVar"
+                         scrollable="true" scrollRows="#{searchMaxResutl}" 
+                         liveScroll="true" scrollHeight="200"
+                           rendered="#{not empty pendingInvoicesController.resultList}"
+                              value="#{pendingInvoicesController.resultList}">
                         
                         <p:column width="50" 
-                             headerText="#{bundle['invoice.detail.amount']}" >
+                             headerText="#{bundle['invoice.number']}" >
                              <div align="right">
-                                <h:outputText value="#{_detail.amount}" />
+                                <h:outputText value="#{_invoice.number}" />
                              </div>
                         </p:column>
 
-                        <p:column headerText="#{bundle['item.description']}" >
-                            <h:outputText value="#{_detail.item.description}" />
+                        <p:column headerText="#{bundle['label.name']}" >
+                            <h:outputText value="#{_invoice.supplier.name}" />
                         </p:column>
                                                 
+                        <p:column width="70" headerText="#{bundle['invoice.date']}" >
+                            <div align="right">
+                                <h:outputText value="#{_invoice.invoiceDate}" />
+                            </div>
+                        </p:column>
+                        
                         <p:column width="70"   
-                             headerText="#{bundle['invoice.detail.unitPrice']}">
+                             headerText="#{bundle['label.total']}">
                             <div align="right">
-                                <h:outputText value="#{_detail.unitPrice}" />
-                            </div>
-                        </p:column>
-                        
-                        <p:column width="70" headerText="#{bundle['exempt']}" >
-                            <div align="right">
-                                <h:outputText value="#{_detail.exempt}" />
-                            </div>
-                        </p:column>
-                        
-                        <p:column width="70" headerText="#{bundle['iva05']}" >
-                            <div align="right">
-                                <h:outputText value="#{_detail.iva05}" />
-                            </div>
-                        </p:column>
-                        
-                        <p:column width="70" headerText="#{bundle['iva10']}" >
-                            <div align="right">
-                                <h:outputText value="#{_detail.iva10}" />
+                                <h:outputText value="#{_invoice.totalAmount}" />
                             </div>
                         </p:column>
                         
                         <p:column width="100" style="text-align: center;" 
-                             headerText="#{bundle['label.actions']}" >
+                             headerText="#{bundle['label.select']}" >
                         
-                           <h:outputText value="select[]" />                
-                            
+                            <p:selectBooleanCheckbox id="selectInvoice" 
+                                                  value="#{_invoice.selected}" >
+                                <f:attribute name="invoice" value="#{_invoice}" />
+                                <p:ajax event="change" immediate="true" process="@this" 
+                                       update=":editform:processbutton" 
+                                      onLabel="Yes" offLabel="No" 
+                                       onIcon="ui-icon-check" offIcon="ui-icon-close" 
+                                     listener="#{pendingInvoicesController.selectListener}"/>                
+                            </p:selectBooleanCheckbox>
                         </p:column>
  
                     </p:dataTable>  
@@ -102,21 +120,17 @@
                 <!-- action buttons panel -->
                 <p:panel id="buttonspanel">
                     <p:spacer height="10px" />
-                    <h:panelGroup id="buttonsgroup">
+                    <h:panelGroup id="buttonsgroup" style="text-align: right;">
                     
-                        <p:commandButton id="savebutton" value="#{bundle['button.label.save']}"  
+                        <p:commandButton id="processbutton" value="#{bundle['button.label.process']}"  
                                        icon="ui-icon-document" update=":editform" 
-                                   disabled="#{not supplierSearchPanel.selected}"
-                                     action="#{pendingInvoicesController.save}" />
+                                   disabled="#{not pendingInvoicesController.processable}"
+                                     action="#{pendingInvoicesController.processInvoices}" />
             
                         <p:commandButton id="cancelbutton" value="#{bundle['button.label.cancel']}"  
                                        icon="ui-icon-document" ajax="false" immediate="true" 
                                      action="#{pendingInvoicesController.initVarz}" />
             
-                        <p:commandButton id="closebutton" value="#{bundle['button.label.close']}" 
-                                       icon="ui-icon-close" ajax="false" immediate="true"
-                             actionListener="#{pendingInvoicesController.clear}"
-                                     action="#{navigationRulez.goIndex()}"/>
                     </h:panelGroup>
                     
                 </p:panel>

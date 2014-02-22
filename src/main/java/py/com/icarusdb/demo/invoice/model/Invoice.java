@@ -24,6 +24,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import py.com.icarusdb.entity.EntityBase;
 import py.com.icarusdb.entity.EntityInterface;
 import py.com.icarusdb.util.IDBProperties;
 
@@ -32,16 +33,14 @@ import py.com.icarusdb.util.IDBProperties;
  */
 @Entity
 @Table(name = "invoice", schema = "public")
-public class Invoice implements EntityInterface
+public class Invoice extends EntityBase implements EntityInterface
 {
     /**
      * 
      */
     private static final long serialVersionUID = 5602514763693442402L;
 
-
     private static final String GENERATOR = "INVOICE_ID_GENERATOR";
-
 
     private Long id;
     private Supplier supplier;
