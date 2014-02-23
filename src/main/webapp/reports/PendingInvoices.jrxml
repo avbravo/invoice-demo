@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PendingInvoices" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0c34b887-c9a2-4da7-9973-bf01ec86f157">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PendingInvoices" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0c34b887-c9a2-4da7-9973-bf01ec86f157">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -8,17 +8,21 @@
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
 	<style name="Detail" fontName="Arial" fontSize="12"/>
 	<parameter name="reportTitle" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["Pending Invoices" ]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["Pending Invoices"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="companyName" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["IcarusDB"]]></defaultValueExpression>
 	</parameter>
 	<field name="supplier.name" class="java.lang.String"/>
 	<field name="invoiceDate" class="java.util.Date"/>
-	<field name="number" class="java.lang.Integer"/>
+	<field name="number" class="java.lang.String"/>
 	<field name="totalAmount" class="java.math.BigDecimal"/>
-	<variable name="itemCounter" class="java.lang.Integer" incrementType="Column" calculation="Count">
+	<variable name="itemCounter" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{number}]]></variableExpression>
 		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="totalAmount" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{totalAmount}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -54,34 +58,36 @@
 			</line>
 			<staticText>
 				<reportElement x="110" y="15" width="100" height="20" uuid="11e4e544-fd90-46c6-8e40-397db90dca4f"/>
-				<textElement verticalAlignment="Bottom"/>
-				<text><![CDATA[supplier.name]]></text>
+				<textElement verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Supplier]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="35" y="15" width="70" height="20" uuid="6ae2276f-af18-4b8f-ae48-a85be2bec521"/>
-				<textElement verticalAlignment="Bottom"/>
-				<text><![CDATA[invoiceDate]]></text>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="455" y="15" width="100" height="20" uuid="8d987335-cd31-445b-8720-1b9db375c497"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
-				<text><![CDATA[totalAmount]]></text>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice Amount]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="343" y="15" width="100" height="20" uuid="4a75c755-5df0-40da-a91b-eef8f661a864"/>
-				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[number]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="16" splitType="Stretch">
-			<line>
-				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="a984f4f5-b045-4a15-b290-340eae7c1e5c"/>
-				<graphicElement>
-					<pen lineWidth="0.5" lineColor="#999999"/>
-				</graphicElement>
-			</line>
 			<textField>
 				<reportElement x="0" y="0" width="30" height="15" uuid="34502af9-e795-47e1-bf3b-622e41014732"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
@@ -102,7 +108,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{totalAmount}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="343" y="0" width="100" height="15" uuid="3f9e59b0-7264-4369-84b5-bcf53d4090eb"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
@@ -110,7 +116,7 @@
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch">
+		<band height="5" splitType="Stretch">
 			<line>
 				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="61e1594d-95dc-4fec-9883-2407f6533ea9"/>
 				<graphicElement>
@@ -120,28 +126,42 @@
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="20" splitType="Stretch">
+		<band height="50" splitType="Stretch">
 			<textField>
-				<reportElement style="Column header" x="433" y="0" width="80" height="20" uuid="0180c6b5-bc30-485d-8740-83615ffd2cd2"/>
+				<reportElement style="Column header" x="435" y="30" width="80" height="20" uuid="0180c6b5-bc30-485d-8740-83615ffd2cd2"/>
 				<textElement textAlignment="Right">
 					<font size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement style="Column header" x="513" y="0" width="40" height="20" uuid="dcab9ed4-8435-4e59-be71-6ebf53840db4"/>
+				<reportElement style="Column header" x="515" y="30" width="40" height="20" uuid="dcab9ed4-8435-4e59-be71-6ebf53840db4"/>
 				<textElement>
 					<font size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement style="Column header" x="0" y="0" width="197" height="20" uuid="292e2f9b-5ef8-411a-9e17-a6c7df80c762"/>
+				<reportElement style="Column header" x="2" y="30" width="197" height="20" uuid="292e2f9b-5ef8-411a-9e17-a6c7df80c762"/>
 				<textElement>
 					<font size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
+			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement x="435" y="0" width="120" height="20" uuid="63e9ae37-5a43-4e9d-bf24-1bae6d9fcdb6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalAmount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="333" y="0" width="100" height="20" uuid="427af27f-67d2-4009-858f-71a0e2a22365"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total to pay:]]></text>
+			</staticText>
 		</band>
 	</pageFooter>
 	<summary>

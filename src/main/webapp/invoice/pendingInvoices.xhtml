@@ -48,12 +48,12 @@
                                      actionListener="#{pendingInvoicesController.clear}" />
                                 <p:spacer width="10px"/>
                                 <p:commandButton id="searchbutton" icon="ui-icon-search" 
-                                             update="collectionpanel printbutton"
+                                             update="collectionpanel printbutton" 
                                               value="#{bundle['search.label.lookup']}" 
                                      actionListener="#{pendingInvoicesController.search}" />
                                 <p:spacer width="10px"/>
                                 <p:commandButton id="printbutton" icon="ui-icon-print" 
-                                             update=":editform:processbutton"
+                                             update=":editform:processbutton" ajax="false"
                                            disabled="#{not pendingInvoicesController.printable}"
                                               value="#{bundle['button.label.print']}" 
                                      actionListener="#{pendingInvoicesController.print}" />

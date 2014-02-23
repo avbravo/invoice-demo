@@ -27,8 +27,10 @@ import py.com.icarusdb.demo.util.BaseController;
 import py.com.icarusdb.demo.util.ListController;
 import py.com.icarusdb.demo.util.MessageUtil;
 import py.com.icarusdb.demo.util.NavigationRulezHelper;
+import py.com.icarusdb.demo.util.SessionParameters;
 import py.com.icarusdb.entity.EntityInterface;
 import py.com.icarusdb.util.CalendarHelper;
+import py.com.icarusdb.util.CollectionHelper;
 
 /**
  * @author mcrose
@@ -40,6 +42,11 @@ import py.com.icarusdb.util.CalendarHelper;
 public class PendingInvoicesController extends BaseController implements ListController, Serializable
 {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6639958063722946645L;
+
     @Inject
     private Credentials credentials;
 
@@ -166,7 +173,7 @@ public class PendingInvoicesController extends BaseController implements ListCon
     
     public boolean isPrintable()
     {
-        return (!resultList.isEmpty()) && (selectedInvoices > 0 );
+        return (resultList != null) && (!resultList.isEmpty()) && (selectedInvoices > 0 );
     }
     
     
@@ -209,13 +216,15 @@ public class PendingInvoicesController extends BaseController implements ListCon
 //            return;
 //        }
         
+        List<EntityInterface> selectedInvoices = CollectionHelper.getElementsByPropertyName(resultList, true, SessionParameters.SELECTED);
+        
         reportController.init();
         
         reportController.setReportPath("/reports");
         reportController.setReportTemplateName("PendingInvoices");
 
         reportController.setReportName("Pending Invoices");
-        reportController.addDataSourceEntityCollection(new LinkedList<EntityInterface>(resultList));
+        reportController.addDataSourceEntityCollection(selectedInvoices);
         
         reportController.addParameter("companyName" , credentials.getCompanyName());
         reportController.addParameter("fromDate" , fromDate);

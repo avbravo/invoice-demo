@@ -24,6 +24,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
+import py.com.icarusdb.demo.util.SessionParameters;
 import py.com.icarusdb.entity.EntityBase;
 import py.com.icarusdb.entity.EntityInterface;
 import py.com.icarusdb.util.IDBProperties;
@@ -178,6 +179,7 @@ public class Invoice extends EntityBase implements EntityInterface
     {
         Properties properties = new IDBProperties();
         properties.put("id", id);
+        properties.put(SessionParameters.SELECTED, isSelected());
         
         return properties;
     }

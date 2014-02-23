@@ -6,6 +6,7 @@ package py.com.icarusdb.demo.invoice.controller;
 import java.io.File;
 import java.io.Serializable;
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -21,6 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import py.com.icarusdb.demo.session.Credentials;
 import py.com.icarusdb.demo.util.AppHelper;
 import py.com.icarusdb.demo.util.ReportAction;
@@ -40,7 +42,7 @@ public class ReportController extends ReportAction implements Serializable
     /**
      * 
      */
-    private static final long serialVersionUID = -1529623981462579091L;
+    private static final long serialVersionUID = -16707338676659598L;
 
     @Inject Credentials credentials;
 
@@ -200,11 +202,11 @@ public class ReportController extends ReportAction implements Serializable
         super.generateReport(type);
     }
 
-//    @Override TODO implement wrapper
-//    public JRBeanCollectionDataSource wrapDS(Collection<?extends EntityInterface> dataSource)
-//    {
-//        return super.wrapDS(dataSource);
-//    }
+    @Override 
+    public JRBeanCollectionDataSource wrapDS(Collection<?extends EntityInterface> dataSource)
+    {
+        return super.wrapDS(dataSource);
+    }
     
     public void addSubReportDir()
     {
