@@ -45,7 +45,7 @@
                                 <p:commandButton id="clearbutton" icon="ui-icon-close" 
                                              update=":editform"
                                               value="#{bundle['button.label.clear']}" 
-                                     actionListener="#{pendingInvoicesController.initVarz}" />
+                                     actionListener="#{pendingInvoicesController.clear}" />
                                 <p:spacer width="10px"/>
                                 <p:commandButton id="searchbutton" icon="ui-icon-search" 
                                              update="collectionpanel printbutton"
@@ -54,7 +54,7 @@
                                 <p:spacer width="10px"/>
                                 <p:commandButton id="printbutton" icon="ui-icon-print" 
                                              update=":editform:processbutton"
-                                           disabled="#{empty pendingInvoicesController.resultList}"
+                                           disabled="#{not pendingInvoicesController.printable}"
                                               value="#{bundle['button.label.print']}" 
                                      actionListener="#{pendingInvoicesController.print}" />
                             </h:panelGroup>
@@ -64,8 +64,8 @@
                     
                 </p:panel>
                 <br />
-                <p:panel id="collectionpanel" style="min-height: 100px; " 
-                     header="#{bundle['invoice.details']}">
+                <p:panel id="collectionpanel" style="min-height: 50px; " 
+                     header="#{bundle['invoice.details']}" toggleable="true">
                      
                     <p:dataTable id="datatablecollection" 
                                 var="_invoice" rowIndexVar="_indexVar"
@@ -104,11 +104,8 @@
                             <p:selectBooleanCheckbox id="selectInvoice" 
                                                   value="#{_invoice.selected}" >
                                 <f:attribute name="invoice" value="#{_invoice}" />
-                                <p:ajax event="change" immediate="true" process="@this" 
-                                       update=":editform:processbutton" 
-                                      onLabel="Yes" offLabel="No" 
-                                       onIcon="ui-icon-check" offIcon="ui-icon-close" 
-                                     listener="#{pendingInvoicesController.selectListener}"/>                
+                                <p:ajax update=":editform:processbutton :editform:printbutton" 
+                                      listener="#{pendingInvoicesController.selectListener}"/>                
                             </p:selectBooleanCheckbox>
                         </p:column>
  
@@ -118,10 +115,10 @@
                 </p:panel>
                 
                 <!-- action buttons panel -->
-                <p:panel id="buttonspanel">
+                <p:panel id="buttonspanel" >
                     <p:spacer height="10px" />
-                    <h:panelGroup id="buttonsgroup" style="text-align: right;">
-                    
+                    <h:panelGroup id="buttonsgroup" >
+                        <div align="right">
                         <p:commandButton id="processbutton" value="#{bundle['button.label.process']}"  
                                        icon="ui-icon-document" update=":editform" 
                                    disabled="#{not pendingInvoicesController.processable}"
@@ -129,8 +126,8 @@
             
                         <p:commandButton id="cancelbutton" value="#{bundle['button.label.cancel']}"  
                                        icon="ui-icon-document" ajax="false" immediate="true" 
-                                     action="#{pendingInvoicesController.initVarz}" />
-            
+                                     action="#{pendingInvoicesController.clear}" />
+                        </div>
                     </h:panelGroup>
                     
                 </p:panel>

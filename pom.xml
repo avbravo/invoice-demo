@@ -53,6 +53,12 @@
     	<scope>provided</scope>
     	<optional>false</optional>
     </dependency>
+    <dependency>
+        <groupId>net.sf.jasperreports</groupId>
+        <artifactId>jasperreports</artifactId>
+        <version>5.5.0</version>
+    </dependency>
+                
   </dependencies>
   <profiles>
     <profile>

@@ -5,25 +5,22 @@ package py.com.icarusdb.demo.invoice.controller;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.component.behavior.Behavior;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.event.SelectEvent;
 
 import py.com.icarusdb.demo.invoice.data.DatabaseManager;
 import py.com.icarusdb.demo.invoice.model.Invoice;
 import py.com.icarusdb.demo.session.ContextHelper;
+import py.com.icarusdb.demo.session.Credentials;
 import py.com.icarusdb.demo.session.InvoiceDemoNavigationRulez;
 import py.com.icarusdb.demo.util.AppHelper;
 import py.com.icarusdb.demo.util.BaseController;
@@ -43,6 +40,9 @@ import py.com.icarusdb.util.CalendarHelper;
 public class PendingInvoicesController extends BaseController implements ListController, Serializable
 {
     
+    @Inject
+    private Credentials credentials;
+
     @Inject 
     private ContextHelper contextHelper;
     
@@ -51,6 +51,9 @@ public class PendingInvoicesController extends BaseController implements ListCon
     
     @Inject 
     private DatabaseManager manager;
+    
+    @Inject 
+    private ReportController reportController;
     
     
     
@@ -65,7 +68,7 @@ public class PendingInvoicesController extends BaseController implements ListCon
     private List<Invoice> resultList = null;
 
     private boolean processable = false;
-    
+    public int selectedInvoices = 0;
     
     @Override
     @PostConstruct
@@ -85,7 +88,7 @@ public class PendingInvoicesController extends BaseController implements ListCon
         initVarz();
     }
     
-    public void initVarz()
+    private void initVarz()
     {
         fromDate = null;
         tillDate = null;
@@ -93,11 +96,15 @@ public class PendingInvoicesController extends BaseController implements ListCon
         resultList = new LinkedList<Invoice>();
         
         processable = false;
+        selectedInvoices = 0;
     }
 
     public void clear()
     {
         contextHelper.clearAction();
+        em.clear();
+        
+        initVarz();
     }
 
     
@@ -157,6 +164,11 @@ public class PendingInvoicesController extends BaseController implements ListCon
         return processable;
     }
     
+    public boolean isPrintable()
+    {
+        return (!resultList.isEmpty()) && (selectedInvoices > 0 );
+    }
+    
     
     
 
@@ -181,39 +193,51 @@ public class PendingInvoicesController extends BaseController implements ListCon
         
         MessageUtil.showResults(resultList);
         
-        processable  = false;
+        processable = false;
+        selectedInvoices = 0;
     }
 
     @Override
     public void print()
     {
         processable = true;
+
+        // not needed here
+//        if(resultList == null || resultList.isEmpty())
+//        {
+//            MessageUtil.addFacesMessageWarm("error.report.emptyCollection");
+//            return;
+//        }
+        
+        reportController.init();
+        
+        reportController.setReportPath("/reports");
+        reportController.setReportTemplateName("PendingInvoices");
+
+        reportController.setReportName("Pending Invoices");
+        reportController.addDataSourceEntityCollection(new LinkedList<EntityInterface>(resultList));
+        
+        reportController.addParameter("companyName" , credentials.getCompanyName());
+        reportController.addParameter("fromDate" , fromDate);
+        reportController.addParameter("tillDate" , tillDate);
+        
+        reportController.print();
+        
     }
     
     public void selectListener(AjaxBehaviorEvent event)
     {
-        System.out.println("source attrs");
-
-        SelectBooleanCheckbox source = (SelectBooleanCheckbox) event.getSource();
-        Iterator<String> iter = source.getAttributes().keySet().iterator();
-        while (iter.hasNext())
+        Invoice invoice = (Invoice) event.getComponent().getAttributes().get("invoice");
+        
+        if(invoice.isSelected()) 
         {
-            String key = iter.next();
-            Object object = source.getAttributes().get(key);
-            
-            System.out.println("key: " + key + " value: " + object);
+            selectedInvoices++;
+        }
+        else
+        {
+            selectedInvoices--;
         }
         
-        System.out.println(".");
-        System.out.println("component attrs");
-        Iterator<String> iterator = event.getComponent().getAttributes().keySet().iterator();
-        while (iterator.hasNext())
-        {
-            String key = iterator.next();
-            Object object = event.getComponent().getAttributes().get(key);
-            
-            System.out.println("key: " + key + " value: " + object);
-        }
     }
     
     public void processInvoices()
@@ -222,18 +246,23 @@ public class PendingInvoicesController extends BaseController implements ListCon
         {
             for(Invoice invoice : resultList)
             {
-                invoice.setProcessed(true);
-                manager.update(invoice);
+                if(invoice.isSelected())
+                {
+                    invoice.setProcessed(true);
+                    manager.update(invoice);
+                }
             }
 
             MessageUtil.addFacesMessageInfo("action.result.invoices.processed");
-            
-            initVarz();
             
         }
         catch (Exception e)
         {
             AppHelper.printException(e);
+        }
+        finally
+        {
+            clear();
         }
         
     }
