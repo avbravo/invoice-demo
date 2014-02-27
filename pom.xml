@@ -48,12 +48,6 @@
     	<optional>false</optional>
     </dependency>
     <dependency>
-    	<groupId>org.jboss.spec.javax.faces</groupId>
-    	<artifactId>jboss-jsf-api_2.0_spec</artifactId>
-    	<scope>provided</scope>
-    	<optional>false</optional>
-    </dependency>
-    <dependency>
         <groupId>net.sf.jasperreports</groupId>
         <artifactId>jasperreports</artifactId>
         <version>5.5.0</version>
