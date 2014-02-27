@@ -40,11 +40,6 @@
     	<groupId>org.jboss.spec.javax.faces</groupId>
     	<artifactId>jboss-jsf-api_2.0_spec</artifactId>
     	<scope>provided</scope>
-    </dependency>
-    <dependency>
-    	<groupId>org.jboss.spec.javax.faces</groupId>
-    	<artifactId>jboss-jsf-api_2.0_spec</artifactId>
-    	<scope>provided</scope>
     	<optional>false</optional>
     </dependency>
     <dependency>
@@ -52,7 +47,11 @@
         <artifactId>jasperreports</artifactId>
         <version>5.5.0</version>
     </dependency>
-                
+    <dependency>
+          <groupId>py.com.icarusdb</groupId>
+          <artifactId>icarusdb-common-lib</artifactId>
+          <version>0.5</version>
+    </dependency>
   </dependencies>
   <profiles>
     <profile>
