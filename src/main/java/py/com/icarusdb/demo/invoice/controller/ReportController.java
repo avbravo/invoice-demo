@@ -23,12 +23,12 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import py.com.icarusdb.common.EntityInterface;
+import py.com.icarusdb.common.MIMEType;
+import py.com.icarusdb.common.ReportParameters;
 import py.com.icarusdb.demo.session.Credentials;
 import py.com.icarusdb.demo.util.AppHelper;
 import py.com.icarusdb.demo.util.ReportAction;
-import py.com.icarusdb.entity.EntityInterface;
-import py.com.icarusdb.util.MIMEType;
-import py.com.icarusdb.util.ReportParameters;
 
 
 /**
@@ -42,7 +42,7 @@ public class ReportController extends ReportAction implements Serializable
     /**
      * 
      */
-    private static final long serialVersionUID = -16707338676659598L;
+    private static final long serialVersionUID = 191074930654081851L;
 
     @Inject Credentials credentials;
 

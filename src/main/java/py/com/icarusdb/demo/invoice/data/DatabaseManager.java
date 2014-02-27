@@ -10,8 +10,8 @@ import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
+import py.com.icarusdb.common.EntityInterface;
 import py.com.icarusdb.demo.util.SessionParameters;
-import py.com.icarusdb.entity.EntityInterface;
 
 @Named
 @RequestScoped
@@ -20,7 +20,7 @@ public class DatabaseManager implements Serializable
     /**
      * 
      */
-    private static final long serialVersionUID = -966023395247001559L;
+    private static final long serialVersionUID = 2001352037303815594L;
 
     @Inject
     protected transient Logger logger;

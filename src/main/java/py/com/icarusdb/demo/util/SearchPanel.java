@@ -3,7 +3,7 @@ package py.com.icarusdb.demo.util;
 import java.io.Serializable;
 import java.util.List;
 
-import py.com.icarusdb.entity.EntityInterface;
+import py.com.icarusdb.common.EntityInterface;
 
 /**
  * @author rgamarra

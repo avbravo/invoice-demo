@@ -8,7 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
-import py.com.icarusdb.dto.BaseCredentials;
+import py.com.icarusdb.common.BaseCredentials;
 
 @SessionScoped
 @Named
@@ -18,7 +18,7 @@ public class Credentials extends BaseCredentials implements Serializable
      * 
      */
     private static final long serialVersionUID = 7569366513123476994L;
-
+    
     private String companyName = null;
     
     @PostConstruct

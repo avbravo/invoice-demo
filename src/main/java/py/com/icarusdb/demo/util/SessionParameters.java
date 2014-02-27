@@ -5,7 +5,7 @@ import java.util.Locale;
 import javax.enterprise.inject.Produces;
 import javax.inject.Named;
 
-import py.com.icarusdb.util.GlobalParameters;
+import py.com.icarusdb.common.GlobalParameters;
 
 public class SessionParameters extends GlobalParameters
 {

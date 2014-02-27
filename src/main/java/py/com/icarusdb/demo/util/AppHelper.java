@@ -21,9 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.RollbackException;
 
-import py.com.icarusdb.util.BundleHelper;
-
-
+import py.com.icarusdb.common.BundleHelper;
 
 /**
  * @author RobertoGamarra

@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import py.com.icarusdb.entity.EntityInterface;
-import py.com.icarusdb.util.MIMEType;
-import py.com.icarusdb.util.ReportHelper;
-import py.com.icarusdb.util.ReportParameters;
+import py.com.icarusdb.common.EntityInterface;
+import py.com.icarusdb.common.MIMEType;
+import py.com.icarusdb.common.ReportHelper;
+import py.com.icarusdb.common.ReportParameters;
 
 /**
  * @author rgamarra

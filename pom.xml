@@ -47,12 +47,12 @@
         <artifactId>jasperreports</artifactId>
         <version>5.5.0</version>
     </dependency>
-    <dependency>
-          <groupId>py.com.icarusdb</groupId>
-          <artifactId>icarusdb-common-lib</artifactId>
-          <version>0.5</version>
-          <scope>provided</scope>
-    </dependency>
+<!--     <dependency> -->
+<!--           <groupId>py.com.icarusdb</groupId> -->
+<!--           <artifactId>icarusdb-common-lib</artifactId> -->
+<!--           <version>0.5</version> -->
+<!--           <scope>provided</scope> -->
+<!--     </dependency> -->
   </dependencies>
   <profiles>
     <profile>

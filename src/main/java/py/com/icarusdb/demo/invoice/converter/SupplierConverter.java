@@ -10,7 +10,7 @@ import javax.faces.convert.Converter;
 import javax.faces.convert.ConverterException;
 import javax.faces.convert.FacesConverter;
 
-import py.com.icarusdb.converter.EntityConverter;
+import py.com.icarusdb.common.EntityConverter;
 import py.com.icarusdb.demo.invoice.model.Supplier;
 import py.com.icarusdb.demo.util.SessionParameters;
 

@@ -17,6 +17,9 @@ import javax.inject.Inject;
 
 import org.primefaces.event.SelectEvent;
 
+import py.com.icarusdb.common.CalendarHelper;
+import py.com.icarusdb.common.CollectionHelper;
+import py.com.icarusdb.common.EntityInterface;
 import py.com.icarusdb.demo.invoice.data.DatabaseManager;
 import py.com.icarusdb.demo.invoice.model.Invoice;
 import py.com.icarusdb.demo.session.ContextHelper;
@@ -28,9 +31,6 @@ import py.com.icarusdb.demo.util.ListController;
 import py.com.icarusdb.demo.util.MessageUtil;
 import py.com.icarusdb.demo.util.NavigationRulezHelper;
 import py.com.icarusdb.demo.util.SessionParameters;
-import py.com.icarusdb.entity.EntityInterface;
-import py.com.icarusdb.util.CalendarHelper;
-import py.com.icarusdb.util.CollectionHelper;
 
 /**
  * @author mcrose
@@ -41,11 +41,10 @@ import py.com.icarusdb.util.CollectionHelper;
 @RolesAllowed({"supermaster", "icarus", "luchobenitez"})
 public class PendingInvoicesController extends BaseController implements ListController, Serializable
 {
-    
     /**
      * 
      */
-    private static final long serialVersionUID = -6639958063722946645L;
+    private static final long serialVersionUID = 585062663673778756L;
 
     @Inject
     private Credentials credentials;

@@ -5,7 +5,7 @@ package py.com.icarusdb.demo.util;
 
 import javax.annotation.PostConstruct;
 
-import py.com.icarusdb.entity.EntityInterface;
+import py.com.icarusdb.common.EntityInterface;
 
 
 /**
