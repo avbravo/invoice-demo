@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
 
 import org.primefaces.examples.GuestPreferences;
 
@@ -15,8 +16,7 @@ import org.primefaces.examples.GuestPreferences;
  * @author rgamarra
  * 
  */
-@javax.inject.Named
-@javax.enterprise.context.ApplicationScoped
+@ManagedBean
 public class ThemeSwitcherBean
 {
     private Map<String, String> themes = null;
