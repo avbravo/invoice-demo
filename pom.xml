@@ -51,6 +51,7 @@
           <groupId>py.com.icarusdb</groupId>
           <artifactId>icarusdb-common-lib</artifactId>
           <version>0.5</version>
+          <scope>provided</scope>
     </dependency>
   </dependencies>
   <profiles>
