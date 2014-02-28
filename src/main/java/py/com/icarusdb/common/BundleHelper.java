@@ -22,7 +22,7 @@ public class BundleHelper
      */
     public static String getBundleMessage(String key)
     {
-        return getBundleMessage("py.com.icarusdb.messages.CommonMessages", key);
+        return getBundleMessage("py.com.icarusdb.common.CommonMessages", key);
     }
     
     public static String getBundleMessage(String bundleName, String key)
