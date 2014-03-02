@@ -1,0 +1,513 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.1.12
+-- Dumped by pg_dump version 9.1.12
+-- Started on 2014-03-02 16:27:55 PYST
+
+SET statement_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 171 (class 3079 OID 11645)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 1915 (class 0 OID 0)
+-- Dependencies: 171
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 168 (class 1259 OID 24716)
+-- Dependencies: 1780 5
+-- Name: invoice; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE invoice (
+    id bigint NOT NULL,
+    invoice_date date NOT NULL,
+    number character varying(50) NOT NULL,
+    total_amount numeric(8,2) NOT NULL,
+    total_iva05 numeric(8,2) NOT NULL,
+    total_iva10 numeric(8,2) NOT NULL,
+    total_exempt numeric(8,2) NOT NULL,
+    processed boolean DEFAULT false NOT NULL,
+    supplier bigint NOT NULL
+);
+
+
+--
+-- TOC entry 170 (class 1259 OID 24726)
+-- Dependencies: 5
+-- Name: invoice_detail; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE invoice_detail (
+    id bigint NOT NULL,
+    invoice bigint NOT NULL,
+    item bigint NOT NULL,
+    amount integer NOT NULL,
+    unit_price numeric(8,2) NOT NULL,
+    iva_05 numeric(8,2),
+    iva_10 numeric(8,2),
+    exempt numeric(8,2)
+);
+
+
+--
+-- TOC entry 169 (class 1259 OID 24724)
+-- Dependencies: 5 170
+-- Name: invoice_detail_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE invoice_detail_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 1916 (class 0 OID 0)
+-- Dependencies: 169
+-- Name: invoice_detail_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE invoice_detail_id_seq OWNED BY invoice_detail.id;
+
+
+--
+-- TOC entry 167 (class 1259 OID 24714)
+-- Dependencies: 5 168
+-- Name: invoice_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE invoice_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 1917 (class 0 OID 0)
+-- Dependencies: 167
+-- Name: invoice_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE invoice_id_seq OWNED BY invoice.id;
+
+
+--
+-- TOC entry 164 (class 1259 OID 24697)
+-- Dependencies: 1777 5
+-- Name: item; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE item (
+    id bigint NOT NULL,
+    description character varying(200) NOT NULL,
+    code character varying(10) NOT NULL,
+    barcode character varying(20),
+    minimun_stock integer DEFAULT 0
+);
+
+
+--
+-- TOC entry 163 (class 1259 OID 24695)
+-- Dependencies: 5 164
+-- Name: item_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE item_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 1918 (class 0 OID 0)
+-- Dependencies: 163
+-- Name: item_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE item_id_seq OWNED BY item.id;
+
+
+--
+-- TOC entry 166 (class 1259 OID 24707)
+-- Dependencies: 5
+-- Name: supplier; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE supplier (
+    id bigint NOT NULL,
+    name character varying(100) NOT NULL,
+    ruc character varying(20),
+    address character varying(200),
+    telephone character varying(20),
+    contact_name character varying(50)
+);
+
+
+--
+-- TOC entry 165 (class 1259 OID 24705)
+-- Dependencies: 166 5
+-- Name: supplier_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE supplier_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 1919 (class 0 OID 0)
+-- Dependencies: 165
+-- Name: supplier_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE supplier_id_seq OWNED BY supplier.id;
+
+
+--
+-- TOC entry 162 (class 1259 OID 24689)
+-- Dependencies: 5
+-- Name: system_user; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE system_user (
+    id bigint NOT NULL,
+    username character varying(10) NOT NULL,
+    password character varying(50) NOT NULL
+);
+
+
+--
+-- TOC entry 161 (class 1259 OID 24687)
+-- Dependencies: 5 162
+-- Name: system_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE system_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- TOC entry 1920 (class 0 OID 0)
+-- Dependencies: 161
+-- Name: system_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE system_user_id_seq OWNED BY system_user.id;
+
+
+--
+-- TOC entry 1779 (class 2604 OID 24719)
+-- Dependencies: 168 167 168
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invoice ALTER COLUMN id SET DEFAULT nextval('invoice_id_seq'::regclass);
+
+
+--
+-- TOC entry 1781 (class 2604 OID 24729)
+-- Dependencies: 169 170 170
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invoice_detail ALTER COLUMN id SET DEFAULT nextval('invoice_detail_id_seq'::regclass);
+
+
+--
+-- TOC entry 1776 (class 2604 OID 24700)
+-- Dependencies: 164 163 164
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item ALTER COLUMN id SET DEFAULT nextval('item_id_seq'::regclass);
+
+
+--
+-- TOC entry 1778 (class 2604 OID 24710)
+-- Dependencies: 166 165 166
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY supplier ALTER COLUMN id SET DEFAULT nextval('supplier_id_seq'::regclass);
+
+
+--
+-- TOC entry 1775 (class 2604 OID 24692)
+-- Dependencies: 162 161 162
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY system_user ALTER COLUMN id SET DEFAULT nextval('system_user_id_seq'::regclass);
+
+
+--
+-- TOC entry 1906 (class 0 OID 24716)
+-- Dependencies: 168 1909
+-- Data for Name: invoice; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO invoice (id, invoice_date, number, total_amount, total_iva05, total_iva10, total_exempt, processed, supplier) VALUES (8, '2014-02-04', '3333', 55.00, 0.00, 55.00, 0.00, false, 6);
+INSERT INTO invoice (id, invoice_date, number, total_amount, total_iva05, total_iva10, total_exempt, processed, supplier) VALUES (9, '2014-02-03', '55', 0.00, 0.00, 0.00, 0.00, false, 6);
+INSERT INTO invoice (id, invoice_date, number, total_amount, total_iva05, total_iva10, total_exempt, processed, supplier) VALUES (11, '2014-02-05', '23', 2.00, 2.00, 0.00, 0.00, false, 12);
+INSERT INTO invoice (id, invoice_date, number, total_amount, total_iva05, total_iva10, total_exempt, processed, supplier) VALUES (12, '2014-02-06', '4567', 70.00, 0.00, 20.00, 50.00, false, 12);
+INSERT INTO invoice (id, invoice_date, number, total_amount, total_iva05, total_iva10, total_exempt, processed, supplier) VALUES (13, '2014-02-12', '3077', 90.00, 45.00, 11.00, 34.00, false, 6);
+INSERT INTO invoice (id, invoice_date, number, total_amount, total_iva05, total_iva10, total_exempt, processed, supplier) VALUES (14, '2014-02-05', '9', 72.00, 52.00, 20.00, 0.00, true, 14);
+INSERT INTO invoice (id, invoice_date, number, total_amount, total_iva05, total_iva10, total_exempt, processed, supplier) VALUES (10, '2014-02-04', '45', 3.00, 0.00, 3.00, 0.00, true, 13);
+
+
+--
+-- TOC entry 1908 (class 0 OID 24726)
+-- Dependencies: 170 1909
+-- Data for Name: invoice_detail; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO invoice_detail (id, invoice, item, amount, unit_price, iva_05, iva_10, exempt) VALUES (11, 8, 4, 1, 55.00, NULL, 55.00, NULL);
+INSERT INTO invoice_detail (id, invoice, item, amount, unit_price, iva_05, iva_10, exempt) VALUES (12, 10, 6, 1, 3.00, NULL, 3.00, NULL);
+INSERT INTO invoice_detail (id, invoice, item, amount, unit_price, iva_05, iva_10, exempt) VALUES (13, 11, 5, 1, 2.00, 2.00, NULL, NULL);
+INSERT INTO invoice_detail (id, invoice, item, amount, unit_price, iva_05, iva_10, exempt) VALUES (14, 12, 7, 1, 50.00, NULL, NULL, 50.00);
+INSERT INTO invoice_detail (id, invoice, item, amount, unit_price, iva_05, iva_10, exempt) VALUES (15, 12, 5, 1, 20.00, NULL, 20.00, NULL);
+INSERT INTO invoice_detail (id, invoice, item, amount, unit_price, iva_05, iva_10, exempt) VALUES (16, 13, 1, 1, 11.00, NULL, 11.00, NULL);
+INSERT INTO invoice_detail (id, invoice, item, amount, unit_price, iva_05, iva_10, exempt) VALUES (17, 13, 4, 1, 45.00, 45.00, NULL, NULL);
+INSERT INTO invoice_detail (id, invoice, item, amount, unit_price, iva_05, iva_10, exempt) VALUES (18, 13, 2, 1, 34.00, NULL, NULL, 34.00);
+INSERT INTO invoice_detail (id, invoice, item, amount, unit_price, iva_05, iva_10, exempt) VALUES (19, 14, 8, 1, 52.00, 52.00, NULL, NULL);
+INSERT INTO invoice_detail (id, invoice, item, amount, unit_price, iva_05, iva_10, exempt) VALUES (20, 14, 1, 1, 20.00, NULL, 20.00, NULL);
+
+
+--
+-- TOC entry 1921 (class 0 OID 0)
+-- Dependencies: 169
+-- Name: invoice_detail_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('invoice_detail_id_seq', 20, true);
+
+
+--
+-- TOC entry 1922 (class 0 OID 0)
+-- Dependencies: 167
+-- Name: invoice_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('invoice_id_seq', 14, true);
+
+
+--
+-- TOC entry 1902 (class 0 OID 24697)
+-- Dependencies: 164 1909
+-- Data for Name: item; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO item (id, description, code, barcode, minimun_stock) VALUES (1, 'Tornillo', 'THOR5', '', 10);
+INSERT INTO item (id, description, code, barcode, minimun_stock) VALUES (2, 'ddd', 'ddd', '', 0);
+INSERT INTO item (id, description, code, barcode, minimun_stock) VALUES (3, 'ggg', 'ggg', '', 0);
+INSERT INTO item (id, description, code, barcode, minimun_stock) VALUES (4, 'Tornillo 3/4', 'THOR34', '', 10);
+INSERT INTO item (id, description, code, barcode, minimun_stock) VALUES (5, 'Pinceles', 'PINCEL44', '', 40);
+INSERT INTO item (id, description, code, barcode, minimun_stock) VALUES (6, 'Martillo', 'MAR77', '', 2);
+INSERT INTO item (id, description, code, barcode, minimun_stock) VALUES (7, 'la tenaza', 'ten10', '', 5);
+INSERT INTO item (id, description, code, barcode, minimun_stock) VALUES (8, 'clavo', 'clavo', '', 34);
+
+
+--
+-- TOC entry 1923 (class 0 OID 0)
+-- Dependencies: 163
+-- Name: item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('item_id_seq', 8, true);
+
+
+--
+-- TOC entry 1904 (class 0 OID 24707)
+-- Dependencies: 166 1909
+-- Data for Name: supplier; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (1, 'El Taladro', 'TALA-5548', 'Av. Santos 12254', '785', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (2, 'Los Troncos', 'THRON333', 'Aserradero 55', '789456', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (3, 'El Granjero', 'GRAN7', 'Av. del Pilar 587', '555', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (4, 'El Granjero', 'GRAN7', 'Av. del Pilar 587', '555', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (5, 'El Tornillo', 'THOR4', 'Asgard', '555-55-555', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (6, 'El Granero', 'GRANA2', 'La Estancia del fondo 63', '', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (7, 'hola', 'hola', '', '', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (8, 'ssss', 'sssss', '', '', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (9, 'aaa', 'aaaa', '', '', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (10, 'aaa', 'aaa', '', '', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (11, 'aa', 'aa', '', '', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (12, 'Atlantida', 'ATLA5', 'bajo el mar', '666444', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (13, 'el grano', 'grano', '', '', NULL);
+INSERT INTO supplier (id, name, ruc, address, telephone, contact_name) VALUES (14, 'choto', 'choto', '', '', NULL);
+
+
+--
+-- TOC entry 1924 (class 0 OID 0)
+-- Dependencies: 165
+-- Name: supplier_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('supplier_id_seq', 14, true);
+
+
+--
+-- TOC entry 1900 (class 0 OID 24689)
+-- Dependencies: 162 1909
+-- Data for Name: system_user; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+
+
+--
+-- TOC entry 1925 (class 0 OID 0)
+-- Dependencies: 161
+-- Name: system_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('system_user_id_seq', 1, false);
+
+
+--
+-- TOC entry 1794 (class 2606 OID 24731)
+-- Dependencies: 170 170 1910
+-- Name: invoice_detail_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invoice_detail
+    ADD CONSTRAINT invoice_detail_pk PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1792 (class 2606 OID 24722)
+-- Dependencies: 168 168 1910
+-- Name: invoice_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invoice
+    ADD CONSTRAINT invoice_pk PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1786 (class 2606 OID 24703)
+-- Dependencies: 164 164 1910
+-- Name: item_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY item
+    ADD CONSTRAINT item_pk PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1789 (class 2606 OID 24712)
+-- Dependencies: 166 166 1910
+-- Name: supplier_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY supplier
+    ADD CONSTRAINT supplier_pk PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1783 (class 2606 OID 24694)
+-- Dependencies: 162 162 1910
+-- Name: system_user_pk; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY system_user
+    ADD CONSTRAINT system_user_pk PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1790 (class 1259 OID 24723)
+-- Dependencies: 168 1910
+-- Name: idx_asc_invoice_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_asc_invoice_number ON invoice USING btree (number);
+
+
+--
+-- TOC entry 1784 (class 1259 OID 24704)
+-- Dependencies: 164 1910
+-- Name: idx_asc_item_description; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_asc_item_description ON item USING btree (description);
+
+
+--
+-- TOC entry 1787 (class 1259 OID 24713)
+-- Dependencies: 166 1910
+-- Name: idx_asc_supplier_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_asc_supplier_name ON supplier USING btree (name);
+
+
+--
+-- TOC entry 1796 (class 2606 OID 24748)
+-- Dependencies: 170 1791 168 1910
+-- Name: invoice_invoice_detail_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invoice_detail
+    ADD CONSTRAINT invoice_invoice_detail_fk FOREIGN KEY (invoice) REFERENCES invoice(id);
+
+
+--
+-- TOC entry 1797 (class 2606 OID 24753)
+-- Dependencies: 164 170 1785 1910
+-- Name: item_invoice_detail_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invoice_detail
+    ADD CONSTRAINT item_invoice_detail_fk FOREIGN KEY (item) REFERENCES item(id);
+
+
+--
+-- TOC entry 1795 (class 2606 OID 24737)
+-- Dependencies: 1788 166 168 1910
+-- Name: supplier_invoice_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invoice
+    ADD CONSTRAINT supplier_invoice_fk FOREIGN KEY (supplier) REFERENCES supplier(id);
+
+
+-- Completed on 2014-03-02 16:27:55 PYST
+
+--
+-- PostgreSQL database dump complete
+--
+
