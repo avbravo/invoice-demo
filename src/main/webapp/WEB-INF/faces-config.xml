@@ -7,16 +7,16 @@
 	version="2.1">
 
     <application>
-        <resource-bundle>
-            <base-name>py.com.icarusdb.demo.resources.Messages</base-name>
-            <var>bundle</var>
-        </resource-bundle>
         <locale-config>
-            <default-locale>en</default-locale>
+            <default-locale>es</default-locale>
             <supported-locale>en</supported-locale>
             <supported-locale>es</supported-locale>
             <supported-locale>br</supported-locale>
         </locale-config>
+        <resource-bundle>
+            <base-name>py.com.icarusdb.demo.resources.Messages</base-name>
+            <var>bundle</var>
+        </resource-bundle>
     </application>
 
 
