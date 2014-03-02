@@ -7,8 +7,12 @@
 	version="2.1">
 
     <application>
+        <resource-bundle>
+            <base-name>py.com.icarusdb.demo.resources.Messages</base-name>
+            <var>bundle</var>
+        </resource-bundle>
         <locale-config>
-            <default-locale>es</default-locale>
+            <default-locale>en</default-locale>
             <supported-locale>en</supported-locale>
             <supported-locale>es</supported-locale>
             <supported-locale>br</supported-locale>
@@ -16,12 +20,6 @@
     </application>
 
 
-<!--     <application> -->
-<!--         <resource-bundle> -->
-<!--             <base-name>resources</base-name> -->
-<!--             <var>msgs</var> -->
-<!--         </resource-bundle> -->
-<!--     </application> -->
 
 <!--     <factory> -->
 <!--         <exception-handler-factory> -->
