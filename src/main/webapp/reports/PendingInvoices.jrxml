@@ -36,14 +36,14 @@
 			<textField>
 				<reportElement style="Title" x="0" y="13" width="263" height="33" uuid="e67cc36e-e2f0-4b96-959e-6a5e140cf546"/>
 				<textElement verticalAlignment="Middle" markup="none">
-					<font fontName="Verdana"/>
+					<font fontName="Nimbus Mono L"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{companyName}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="SubTitle" x="117" y="46" width="157" height="22" uuid="dce4366b-2dac-454a-9c4f-5e488d480653"/>
 				<textElement markup="none">
-					<font fontName="Verdana"/>
+					<font fontName="Nimbus Mono L"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{reportTitle}]]></textFieldExpression>
 			</textField>
@@ -63,28 +63,28 @@
 			<staticText>
 				<reportElement x="110" y="15" width="100" height="20" uuid="11e4e544-fd90-46c6-8e40-397db90dca4f"/>
 				<textElement verticalAlignment="Bottom">
-					<font isBold="true"/>
+					<font fontName="Nimbus Mono L" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Supplier]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="35" y="15" width="70" height="20" uuid="6ae2276f-af18-4b8f-ae48-a85be2bec521"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font isBold="true"/>
+					<font fontName="Nimbus Mono L" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Date]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="455" y="15" width="100" height="20" uuid="8d987335-cd31-445b-8720-1b9db375c497"/>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
-					<font isBold="true"/>
+					<font fontName="Nimbus Mono L" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Invoice Amount]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="343" y="15" width="100" height="20" uuid="4a75c755-5df0-40da-a91b-eef8f661a864"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font isBold="true"/>
+					<font fontName="Nimbus Mono L" isBold="true"/>
 				</textElement>
 				<text><![CDATA[number]]></text>
 			</staticText>
@@ -94,27 +94,37 @@
 		<band height="16" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="30" height="15" uuid="34502af9-e795-47e1-bf3b-622e41014732"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Nimbus Mono L"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$V{itemCounter}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="110" y="0" width="223" height="15" uuid="13a4aa05-78fa-4ed7-99c4-db48f43a1e36"/>
-				<textElement verticalAlignment="Middle"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Nimbus Mono L"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{supplier.name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd-MMM-yyyy" isBlankWhenNull="true">
 				<reportElement x="35" y="0" width="70" height="15" uuid="81fbcb2d-2a74-4ced-8dfb-f6bba90717ff"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Nimbus Mono L"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{invoiceDate}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement x="455" y="0" width="100" height="15" uuid="e0e1d318-72c7-4299-a2a7-2fde985f3b9f"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Nimbus Mono L"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{totalAmount}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="343" y="0" width="100" height="15" uuid="3f9e59b0-7264-4369-84b5-bcf53d4090eb"/>
-				<textElement verticalAlignment="Middle"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Nimbus Mono L"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
 			</textField>
 		</band>
@@ -134,35 +144,35 @@
 			<textField>
 				<reportElement style="Column header" x="435" y="30" width="80" height="20" uuid="0180c6b5-bc30-485d-8740-83615ffd2cd2"/>
 				<textElement textAlignment="Right">
-					<font fontName="Verdana" size="10" isBold="false"/>
+					<font fontName="Nimbus Mono L" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement style="Column header" x="515" y="30" width="40" height="20" uuid="dcab9ed4-8435-4e59-be71-6ebf53840db4"/>
 				<textElement>
-					<font size="10" isBold="false"/>
+					<font fontName="Nimbus Mono L" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField pattern="EEEEE dd MMMMM yyyy">
 				<reportElement style="Column header" x="2" y="30" width="197" height="20" uuid="292e2f9b-5ef8-411a-9e17-a6c7df80c762"/>
 				<textElement>
-					<font fontName="Verdana" size="10" isBold="false"/>
+					<font fontName="Nimbus Mono L" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
 				<reportElement x="435" y="0" width="120" height="20" uuid="63e9ae37-5a43-4e9d-bf24-1bae6d9fcdb6"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font fontName="Nimbus Mono L" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalAmount}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="333" y="0" width="100" height="20" uuid="427af27f-67d2-4009-858f-71a0e2a22365"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font fontName="Nimbus Mono L" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total to pay:]]></text>
 			</staticText>
